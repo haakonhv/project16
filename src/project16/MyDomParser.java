@@ -31,7 +31,7 @@ public class MyDomParser {
             //henter alle XMLevent-noder fra doc og oppretter og setter verdier for Event-objekter. Legger disse
             // i en ArrayList
             NodeList xmlEventList = getEventList(doc);
-            ArrayList eventList = new ArrayList();
+            ArrayList<Event> eventList = new ArrayList<Event>();
             for (int i=0; i<xmlEventList.getLength();i++){
             	Element xmlEvent = (Element) xmlEventList.item(i);
             	Event event = new Event();
@@ -44,22 +44,13 @@ public class MyDomParser {
             	if(xmlEvent.hasAttribute("player_id")){
             		event.setTeamid(Integer.parseInt(xmlEvent.getAttribute("team_id")));
             	}
-            	event.setValue(Integer.parseInt(xmlEvent.getAttribute("event_id")));
+            	event.setValue(Integer.parseInt(xmlEvent.getAttribute("type_id")));
             	event.setXstart(Float.parseFloat(xmlEvent.getAttribute("x")));
             	event.setYstart(Float.parseFloat(xmlEvent.getAttribute("y")));
 
             	eventList.add(event);
             }
-
-
-
-
-
-
-
-
-
-
+            
 
         } catch (ParserConfigurationException e) {
             // TODO Auto-generated catch block
