@@ -1,5 +1,7 @@
 package project16;
 
+import java.util.ArrayList;
+
 public class Event {
 	int id;
 	int value;
@@ -9,6 +11,7 @@ public class Event {
 	float ystart;
 	int number;
 	int gameid;
+	ArrayList<Qualifier> qualifierList;
 
 	public int getId() {
 		return id;
@@ -64,7 +67,13 @@ public class Event {
 		return "Event [id=" + id + ", value=" + value + ", teamid=" + teamid + ", playerid=" + playerid + ", xstart="
 				+ xstart + ", ystart=" + ystart + ", number=" + number + "]";
 	}
+	public ArrayList<Qualifier> getQualifierList() {
+		return qualifierList;
+	}
+	public void setQualifierList(ArrayList<Qualifier> qualifierList) {
+		this.qualifierList = qualifierList;
+	}
 
 
-	
+
 }
