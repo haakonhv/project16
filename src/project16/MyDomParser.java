@@ -21,7 +21,7 @@ public class MyDomParser {
             DocumentBuilder builder = factory.newDocumentBuilder();
             Document doc = builder.parse("f24-90-2014-739631-eventdetails.xml");
             NodeList eventList = getEventList(doc);
-            NodeList qList = getQByEventId("596660156", doc);
+            NodeList qList = getQByEventId("596660156", eventList);
             for (int i=0; i<qList.getLength();i++){
             	Node q = qList.item(i);
             	Element qual = (Element) q;
@@ -51,15 +51,13 @@ public class MyDomParser {
         return childNodeList;
 
     }
-    public static NodeList getQByEventId(String eventId, Document doc){
-        String id = eventId;
-        NodeList eventList = doc.getElementsByTagName("Event");
+    public static NodeList getQByEventId(String eventId, NodeList eventList){
         NodeList qList = null;
         for(int i=0;i<eventList.getLength();i++){
             Node e = eventList.item(i);
             Element event = (Element) e;
             String thisID = event.getAttribute("id");
-            if(thisID.equals(id)){
+            if(thisID.equals(eventId)){
                 qList = getChildNodeList(event);
             }
         }
@@ -73,12 +71,13 @@ public class MyDomParser {
         return qList;
     }
 
-    public ArrayList getCornerIDs(Document doc){
-        ArrayList cornerList = new ArrayList();
-        NodeList eventList = doc.getElementsByTagName("Event");
-        for (int i=0; i<eventList.getLength();i++){
+    public static String getNodeId(Node n){
+		Element e = (Element) n;
+    	return e.getAttribute("id");
 
-        }
-        return cornerList;
     }
+
+
+
+
 }
