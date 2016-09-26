@@ -5,9 +5,11 @@ public class Event {
 	int value;
 	int teamid;
 	int playerid;
-	int xstart;
-	int ystart;
+	float xstart;
+	float ystart;
 	int number;
+	int gameid;
+
 	public int getId() {
 		return id;
 	}
@@ -32,16 +34,16 @@ public class Event {
 	public void setPlayerid(int playerid) {
 		this.playerid = playerid;
 	}
-	public int getXstart() {
+	public float getXstart() {
 		return xstart;
 	}
-	public void setXstart(int xstart) {
+	public void setXstart(float xstart) {
 		this.xstart = xstart;
 	}
-	public int getYstart() {
+	public float getYstart() {
 		return ystart;
 	}
-	public void setYstart(int ystart) {
+	public void setYstart(float ystart) {
 		this.ystart = ystart;
 	}
 	public int getNumber() {
@@ -50,8 +52,16 @@ public class Event {
 	public void setNumber(int number) {
 		this.number = number;
 	}
-	
-	
-	
-	
+
+	public int getGameid() {
+		return gameid;
+	}
+	public void setGameid(int gameid) {
+		this.gameid = gameid;
+	}
+
+
+
+
+
 }

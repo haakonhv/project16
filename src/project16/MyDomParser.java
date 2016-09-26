@@ -18,15 +18,48 @@ public class MyDomParser {
     public static void main(String[] args){
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         try {
-            DocumentBuilder builder = factory.newDocumentBuilder();
+            //builds document from xml file
+        	DocumentBuilder builder = factory.newDocumentBuilder();
             Document doc = builder.parse("f24-90-2014-739631-eventdetails.xml");
-            NodeList eventList = getEventList(doc);
-            NodeList qList = getQByEventId("596660156", eventList);
-            for (int i=0; i<qList.getLength();i++){
-            	Node q = qList.item(i);
-            	Element qual = (Element) q;
-            	System.out.println(qual.getAttribute("id"));
+
+            //oppretter game-objekt, henter ut og setter id fra Game-node i doc
+            Game game = new Game();
+            Node gameNode = doc.getElementsByTagName("Game").item(0);
+            Element gameElement = (Element) gameNode;
+            game.setId(Integer.parseInt(gameElement.getAttribute("id")));
+
+            //henter alle XMLevent-noder fra doc og oppretter og setter verdier for Event-objekter. Legger disse
+            // i en ArrayList
+            NodeList xmlEventList = getEventList(doc);
+            ArrayList eventList = new ArrayList();
+            for (int i=0; i<xmlEventList.getLength();i++){
+            	Element xmlEvent = (Element) xmlEventList.item(i);
+            	Event event = new Event();
+            	event.setId(Integer.parseInt(xmlEvent.getAttribute("id")));
+            	event.setGameid(game.getId());
+            	event.setNumber(i+1);
+            	if(xmlEvent.hasAttribute("player_id")){
+            		event.setPlayerid(Integer.parseInt(xmlEvent.getAttribute("player_id")));
+            	}
+            	if(xmlEvent.hasAttribute("player_id")){
+            		event.setTeamid(Integer.parseInt(xmlEvent.getAttribute("team_id")));
+            	}
+            	event.setValue(Integer.parseInt(xmlEvent.getAttribute("event_id")));
+            	event.setXstart(Float.parseFloat(xmlEvent.getAttribute("x")));
+            	event.setYstart(Float.parseFloat(xmlEvent.getAttribute("y")));
+
+            	eventList.add(event);
             }
+
+
+
+
+
+
+
+
+
+
 
         } catch (ParserConfigurationException e) {
             // TODO Auto-generated catch block
