@@ -59,9 +59,11 @@ public class Event {
 	public void setGameid(int gameid) {
 		this.gameid = gameid;
 	}
+	@Override
+	public String toString() {
+		return "Event [id=" + id + ", value=" + value + ", teamid=" + teamid + ", playerid=" + playerid + ", xstart="
+				+ xstart + ", ystart=" + ystart + ", number=" + number ]";"
+	}
 
-
-
-
-
+	
 }
