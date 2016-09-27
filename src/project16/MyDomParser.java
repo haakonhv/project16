@@ -62,7 +62,7 @@ public class MyDomParser {
          	if(xmlEvent.hasAttribute("player_id")){
          		event.setPlayerid(Integer.parseInt(xmlEvent.getAttribute("player_id")));
          	}
-         	if(xmlEvent.hasAttribute("player_id")){
+         	if(xmlEvent.hasAttribute("team_id")){
          		event.setTeamid(Integer.parseInt(xmlEvent.getAttribute("team_id")));
          	}
          	event.setValue(Integer.parseInt(xmlEvent.getAttribute("type_id")));
