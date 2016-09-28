@@ -66,10 +66,50 @@ public class Main{
 		}
 
 	}
+
+	public static void sendValues() throws ParserConfigurationException, SAXException, IOException, SQLException{
+		Document doc = MyDomParser.getDocument(xmlGameFile);
+		Game game = MyDomParser.getGame(doc);
+		ArrayList<Event> eventList = MyDomParser.getEventList(doc, game);
+		MyDomParser parser = new MyDomParser(eventList, doc, game);
+		for(int i=0; i<eventList.size();i++){
+			Event e = eventList.get(i);
+			for (int j=0; j<e.getQualifierList().size();j++){
+				Qualifier q = e.qualifierList.get(j);
+				if(q.values!=null){
+					for(int k=0; k<q.values.size(); k++){
+						String thisValue = q.values.get(k);
+						String qID = Integer.toString(q.id);
+						try{
+							Float floatValue = Float.parseFloat(thisValue);
+							DataBaseConnector.insert("VALUE_F", qID+","+thisValue);
+						}
+						catch(NumberFormatException nfe_ex){
+							DataBaseConnector.insert("VALUE_S", qID+","+"'"+thisValue+"'");
+
+						}
+
+
+					}
+
+				}
+				else{
+					String qID = Integer.toString(q.id);
+					DataBaseConnector.insert("VALUE_N", qID);
+
+				}
+
+			}
+		}
+
+	}
+
 	public static void main(String[] args) throws ParserConfigurationException, SAXException, IOException, SQLException, ClassNotFoundException{
 		DataBaseConnector.openConnection();
+		sendGame();
 		sendEvents();
 		sendQualifiers();
+		sendValues();
 		DataBaseConnector.closeConnection();
 	}
 
