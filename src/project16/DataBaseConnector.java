@@ -12,7 +12,7 @@ public class DataBaseConnector {
 
 
 
-	public static void main(String[] args) {
+	public static void insert(String table, String values) {
 		Connection conn = null;
 		Statement stmt = null;
 
@@ -28,11 +28,17 @@ public class DataBaseConnector {
 
 			stmt = conn.createStatement();
 
-			 String sql = "INSERT INTO GAME " +
-	                   "VALUES (12345)";
-			 stmt.executeUpdate(sql);
+			String sql = null;
 
-			 System.out.println("Inserted records into the table...");
+			if(table.equals("GAME")){
+				sql = "INSERT INTO GAME " +
+						"VALUES ("+values+")";
+			}
+
+
+			stmt.executeUpdate(sql);
+
+			System.out.println("Inserted records into the table...");
 
 		}catch(SQLException se){
 		      //Handle errors for JDBC
