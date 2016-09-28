@@ -17,24 +17,37 @@ import org.xml.sax.SAXException;
 
 public class MyDomParser {
 
-    public static void main(String[] args) throws ParserConfigurationException, SAXException, IOException{
+	public ArrayList<Event> eventList;
+	public Document doc;
+	public Game game;
 
-        Document doc = newDocument("f24-90-2014-739631-eventdetails.xml");
+	public static void main(String[] args) throws ParserConfigurationException, SAXException, IOException{
+
+//        Document doc = newDocument("f24-90-2014-739631-eventdetails.xml");
 
         //oppretter game-objekt, henter ut og setter id fra Game-node i doc
-        Game game = newGame(doc);
+//        Game game = newGame(doc);
 
         //henter alle XMLevent-noder fra doc og oppretter og setter verdier for Event-objekter. Legger disse
         // i en ArrayList
-        ArrayList<Event> eventList = newEventList(doc, game);
-
-
-
-
+//        ArrayList<Event> eventList = newEventList(doc, game);
 
     }
 
-    public static Document newDocument(String fileName) throws ParserConfigurationException, SAXException, IOException{
+
+
+
+    public MyDomParser(ArrayList<Event> eventList, Document doc, Game game) {
+		super();
+		this.eventList = eventList;
+		this.doc = doc;
+		this.game = game;
+	}
+
+
+
+
+	public static Document getDocument(String fileName) throws ParserConfigurationException, SAXException, IOException{
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         //builds document from xml file
         DocumentBuilder builder = factory.newDocumentBuilder();
@@ -42,7 +55,7 @@ public class MyDomParser {
         return doc;
     }
 
-    public static Game newGame(Document doc){
+    public static  Game getGame(Document doc){
     	Game game = new Game();
         Node gameNode = doc.getElementsByTagName("Game").item(0);
         Element gameElement = (Element) gameNode;
@@ -50,7 +63,7 @@ public class MyDomParser {
         return game;
     }
 
-    public static ArrayList<Event> newEventList (Document doc, Game game){
+    public static  ArrayList<Event> getEventList (Document doc, Game game){
     	 NodeList xmlEventList = getEventList(doc);
          ArrayList<Event> eventList = new ArrayList<Event>();
          for (int i=0; i<xmlEventList.getLength();i++){
@@ -75,7 +88,12 @@ public class MyDomParser {
          return eventList;
     }
 
-    public static ArrayList<Qualifier> getQualifierList(String eventId, NodeList eventList){
+
+
+
+
+
+	public static ArrayList<Qualifier> getQualifierList(String eventId, NodeList eventList){
     	ArrayList<Qualifier> qualifierList = new ArrayList<Qualifier>();
     	NodeList qList = getQByEventId(eventId, eventList);
     	for(int i=0; i<qList.getLength();i++){
