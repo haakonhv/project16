@@ -1,6 +1,11 @@
 package project16;
 
+import java.io.IOException;
 import java.sql.*;
+
+import javax.xml.parsers.ParserConfigurationException;
+
+import org.xml.sax.SAXException;
 
 
 public class DataBaseConnector {
@@ -9,20 +14,16 @@ public class DataBaseConnector {
 
 	static final String USER = "haakosh_master";
 	static final String PASS = "project16";
+	static Connection conn = null;
 
 
 
-	public static void insert(String table, String values) {
-		Connection conn = null;
+	public static void insert(String table, String values) throws SQLException {
+
 		Statement stmt = null;
 
-		try{
-			Class.forName("com.mysql.jdbc.Driver");
 
-			System.out.println("Connecting to database...");
 
-			conn = DriverManager.getConnection(DB_URL, USER, PASS);
-			System.out.println("Connected database successfully...");
 
 			System.out.println("Inserting records into the table...");
 
@@ -32,36 +33,45 @@ public class DataBaseConnector {
 
 			if(table.equals("GAME")){
 				sql = "INSERT INTO GAME " +
+						"VALUES (42)";
+			}
+			else if(table.equals("EVENT")){
+				sql = "INSERT INTO EVENT (Event_id,Value,Xstart,Ystart,Game_id) " +
 						"VALUES ("+values+")";
 			}
+			else if(table.equals("QUALIFIER")){
+				sql = "INSERT INTO QUALIFIER " +
+						"VALUES ("+values+")";
+			}
+
 
 
 			stmt.executeUpdate(sql);
 
 			System.out.println("Inserted records into the table...");
 
-		}catch(SQLException se){
-		      //Handle errors for JDBC
-		      se.printStackTrace();
-		   }catch(Exception e){
-		      //Handle errors for Class.forName
-		      e.printStackTrace();
-		   }finally{
-		      //finally block used to close resources
-		      try{
-		         if(stmt!=null)
-		            conn.close();
-		      }catch(SQLException se){
-		      }// do nothing
-		      try{
-		         if(conn!=null)
-		            conn.close();
-		      }catch(SQLException se){
-		         se.printStackTrace();
-		      }
-		      System.out.println("Goodbye!");
 
-		}
+
 	}
+
+	public static void openConnection() throws ClassNotFoundException, SQLException {
+
+		Class.forName("com.mysql.jdbc.Driver");
+
+		System.out.println("Connecting to database...");
+
+		conn = DriverManager.getConnection(DB_URL, USER, PASS);
+		System.out.println("Connected database successfully...");
+
+
+
+
+	}
+
+	public static void closeConnection() throws SQLException{
+		conn.close();
+		System.out.println("Connection closed...");
+	}
+
 
 }
