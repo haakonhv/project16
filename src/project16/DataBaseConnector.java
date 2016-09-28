@@ -32,8 +32,8 @@ public class DataBaseConnector {
 			String sql = null;
 
 			if(table.equals("GAME")){
-				sql = "INSERT INTO GAME " +
-						"VALUES (42)";
+				sql = "INSERT INTO GAME (Game_id) " +
+						"VALUES ("+values+")";
 			}
 			else if(table.equals("EVENT")){
 				sql = "INSERT INTO EVENT (Event_id,Value,Xstart,Ystart,Game_id) " +
@@ -41,6 +41,18 @@ public class DataBaseConnector {
 			}
 			else if(table.equals("QUALIFIER")){
 				sql = "INSERT INTO QUALIFIER " +
+						"VALUES ("+values+")";
+			}
+			else if(table.equals("VALUE_S")){
+				sql = "INSERT INTO VALUE (Q_id,Value_string) " +
+						"VALUES ("+values+")";
+			}
+			else if(table.equals("VALUE_F")){
+				sql = "INSERT INTO VALUE (Q_id,Value_float) " +
+						"VALUES ("+values+")";
+			}
+			else if(table.equals("VALUE_N")){
+				sql = "INSERT INTO VALUE (Q_id) " +
 						"VALUES ("+values+")";
 			}
 
