@@ -21,22 +21,8 @@ public class MyDomParser {
 	public Document doc;
 	public Game game;
 
-	public static void main(String[] args) throws ParserConfigurationException, SAXException, IOException{
 
-//        Document doc = newDocument("f24-90-2014-739631-eventdetails.xml");
-
-        //oppretter game-objekt, henter ut og setter id fra Game-node i doc
-//        Game game = newGame(doc);
-
-        //henter alle XMLevent-noder fra doc og oppretter og setter verdier for Event-objekter. Legger disse
-        // i en ArrayList
-//        ArrayList<Event> eventList = newEventList(doc, game);
-
-    }
-
-
-
-
+	//Parser-Constructor
     public MyDomParser(ArrayList<Event> eventList, Document doc, Game game) {
 		super();
 		this.eventList = eventList;
@@ -46,28 +32,29 @@ public class MyDomParser {
 
 
 
-
+    //Bygger factory og document fra xml-fil.
 	public static Document getDocument(String fileName) throws ParserConfigurationException, SAXException, IOException{
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-        //builds document from xml file
         DocumentBuilder builder = factory.newDocumentBuilder();
         Document doc = builder.parse(fileName);
         return doc;
     }
 
-    public static  Game getGame(Document doc){
+    //Henter game-node fra xml-dokument oppretter nytt Game-object, setter Game-id og returnerer gamet
+	public static  Game getGame(Document doc){
     	Game game = new Game();
-        Node gameNode = doc.getElementsByTagName("Game").item(0);
-        Element gameElement = (Element) gameNode;
+        Node gameNode = doc.getElementsByTagName("Game").item(0); //Game-noden er det første og eneste elementet med TagName "Game"
+        Element gameElement = (Element) gameNode;  //Node castes til Element for å kunne bruke getAttribute()
         game.setId(Integer.parseInt(gameElement.getAttribute("id")));
         return game;
     }
 
-    public static  ArrayList<Event> getEventList (Document doc, Game game){
-    	 NodeList xmlEventList = getEventList(doc);
+    //Lager en ArrayList med alle Events i et game/document. Attributter i alle Eventene settes. Eventene legges i lista som returneres
+	public static  ArrayList<Event> getEventList (Document doc, Game game){
+    	 NodeList xmlEventList = getXmlEventList(doc);
          ArrayList<Event> eventList = new ArrayList<Event>();
          for (int i=0; i<xmlEventList.getLength();i++){
-         	Element xmlEvent = (Element) xmlEventList.item(i);
+         	Element xmlEvent = (Element) xmlEventList.item(i); //Node castes til Element for å kunne bruke getAttribute()
          	Event event = new Event();
          	event.setId(Integer.parseInt(xmlEvent.getAttribute("id")));
          	event.setGameid(game.getId());
@@ -92,19 +79,19 @@ public class MyDomParser {
 
 
 
-
+	//Henter Qualifiers fra et bestemt Event. Oppretter Qualifier-objekter, setter feltene, legger de til objektene i en ArrayList og returnerer denne.
 	public static ArrayList<Qualifier> getQualifierList(String eventId, NodeList eventList){
     	ArrayList<Qualifier> qualifierList = new ArrayList<Qualifier>();
-    	NodeList qList = getQByEventId(eventId, eventList);
+    	NodeList qList = getQByEventId(eventId, eventList); //Henter NodeList med Qualifiers fra XML-filen
     	for(int i=0; i<qList.getLength();i++){
-    		Element q = (Element) qList.item(i);
+    		Element q = (Element) qList.item(i); //Caster til Element
     		Qualifier qualifier = new Qualifier();
     		qualifier.setId(Integer.parseInt(q.getAttribute("id")));
     		qualifier.setQualifier_id(Integer.parseInt(q.getAttribute("qualifier_id")));
-    		List<String> values = new ArrayList<String>();
-    		String thisValue = q.getAttribute("value");
-    		if (q.hasAttribute("value")){
-    			values = Arrays.asList(thisValue.split("\\s*,\\s*"));
+    		List<String> values = new ArrayList<String>(); //Dette er en liste med alle verdiene (values) til en bestemt Qualifier i et bestemt element
+    		String thisValue = q.getAttribute("value"); //Nåværende iterasjons value-streng. Strengen kan bestå av flere verdier
+    		if (q.hasAttribute("value")){ //Hvis q har values, legges disse til i en liste hvor hver value er et element i lista
+    			values = Arrays.asList(thisValue.split("\\s*,\\s*")); //Her legges alle verdiene inn i value-lista. Splitter på komma for å legge inn alle verdiene i strengen
     			qualifier.setValues(values);
     		}
     		qualifierList.add(qualifier);
@@ -114,17 +101,17 @@ public class MyDomParser {
     	return qualifierList;
     }
 
-    public static NodeList getEventList(Document doc){
-        NodeList eventList = doc.getElementsByTagName("Event");
-        return eventList;
+	//Returner en nodeliste med alle eventene i et document
+    public static NodeList getXmlEventList(Document doc){
+        NodeList xmlEventList = doc.getElementsByTagName("Event");
+        return xmlEventList;
 
     }
 
-    public static NodeList getChildNodeList(Element e){
-        NodeList childNodeList = e.getChildNodes();
-        return childNodeList;
 
-    }
+
+
+    //Returnerer en Nodelist med alle Q-er til et bestemt event. Fjerner alle noder som ikke er element-noder.
     public static NodeList getQByEventId(String eventId, NodeList eventList){
         NodeList qList = null;
         for(int i=0;i<eventList.getLength();i++){
@@ -132,7 +119,7 @@ public class MyDomParser {
             Element event = (Element) e;
             String thisID = event.getAttribute("id");
             if(thisID.equals(eventId)){
-                qList = getChildNodeList(event);
+                qList = event.getChildNodes();
             }
         }
         for (int i=0 ; i<qList.getLength();i++){
@@ -143,12 +130,6 @@ public class MyDomParser {
         }
 
         return qList;
-    }
-
-    public static String getNodeId(Node n){
-		Element e = (Element) n;
-    	return e.getAttribute("id");
-
     }
 
 
