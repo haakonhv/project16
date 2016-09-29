@@ -12,7 +12,7 @@ import java.sql.*;
 
 public class Main{
 
-	public static String xmlGameFile = "f24-90-2014-739631-eventdetails.xml";;
+	public static String xmlGameFile = "f24-90-2014-739634-eventdetails.xml";;
 
 
 	public static void sendGame() throws ParserConfigurationException, SAXException, IOException, SQLException{
