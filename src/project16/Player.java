@@ -2,12 +2,27 @@ package project16;
 
 public class Player {
 
+	@Override
+	public String toString() {
+		return "Player [id=" + id + ", first_name=" + first_name + ", last_name=" + last_name + ", real_position="
+				+ real_position + ", country=" + country + ", birth_year=" + birth_year + ", height=" + height + "]";
+	}
+
 	int id;
 	String first_name;
 	String last_name;
 	String real_position;
 	String country;
 	int birth_year;
+	int height;
+
+	public int getHeight() {
+		return height;
+	}
+
+	public void setHeight(int height) {
+		this.height = height;
+	}
 
 	public String getFirst_name() {
 		return first_name;
