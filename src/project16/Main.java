@@ -167,6 +167,9 @@ public class Main{
 		DataBaseConnector.closeConnection();
 		long endTime = System.nanoTime();
 		System.out.println("Took "+(endTime - startTime)/Math.pow(10,9) + " seconds");
+
+		
+		
 	}
 
 

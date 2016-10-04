@@ -53,6 +53,7 @@ public class MyDomParser {
 	public static  ArrayList<Event> getEventList (Document doc, Game game){
     	 NodeList xmlEventList = getXmlEventList(doc);
          ArrayList<Event> eventList = new ArrayList<Event>();
+         int originalnumber=-1;
          for (int i=0; i<xmlEventList.getLength();i++){
          	Element xmlEvent = (Element) xmlEventList.item(i); //Node castes til Element for å kunne bruke getAttribute()
          	Event event = new Event();
@@ -69,11 +70,27 @@ public class MyDomParser {
          	event.setXstart(Float.parseFloat(xmlEvent.getAttribute("x")));
          	event.setYstart(Float.parseFloat(xmlEvent.getAttribute("y")));
          	event.setQualifierList(getQualifierList(xmlEvent.getAttribute("id"),xmlEventList));
-
+         	
          	eventList.add(event);
+         	if (xmlEvent.getAttribute("type_id").equals("6")){
+         		originalnumber=generateCorner(event, originalnumber);
+         	}
          }
          return eventList;
     }
+	
+	public static int generateCorner(Event event, int lastcorner){
+		int originalnumber=lastcorner;
+		if(originalnumber== -1 || event.getNumber()!=originalnumber+1){
+			System.out.println(originalnumber);
+			originalnumber=event.getNumber();
+			Corner corner = new Corner();
+			corner.setEvent_id(event.getId());
+			System.out.println(corner.getEvent_id());
+		}
+		return originalnumber;
+	}
+		
 
 
 
