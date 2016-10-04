@@ -6,11 +6,17 @@ import java.util.ArrayList;
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.NamedNodeMap;
+import org.w3c.dom.NodeList;
+import org.w3c.dom.Node;
+
 import org.xml.sax.SAXException;
 
 import java.sql.*;
 
 import java.lang.Math;
+
 
 public class Main{
 
@@ -160,10 +166,44 @@ public class Main{
 		}
 	}
 
+	public static void sendTeams() throws ParserConfigurationException, SAXException, IOException, SQLException{
+		Document doc = MyDomParser.getDocument("srml-90-2014-squads.xml");
+		NodeList teams = doc.getElementsByTagName("Team");
+
+		for(int i=0; i<teams.getLength();i++){
+			Node node = teams.item(i);
+			Element t = (Element) node;
+			if (!t.hasAttribute("country")){
+				node.getParentNode().removeChild(node);
+			}
+			else{
+				NodeList cl = node.getChildNodes();
+				Node c = cl.item(1);
+				String teamName = c.getTextContent();
+				try{
+					int num = Integer.parseInt(teamName);
+					c = cl.item(3);
+				}
+				catch (NumberFormatException nfe){
+				}
+				Team team = new Team();
+				String uid = t.getAttribute("uID");
+				uid = uid.replace("t", "");
+				team.setId(Integer.parseInt(uid));
+				team.setName(c.getTextContent());
+				System.out.println(team.getName());
+				String values = team.getId()+","+"'"+team.getName()+"'";
+				DataBaseConnector.insert("TEAM", values);
+			}
+		}
+
+
+	}
+
 	public static void main(String[] args) throws ParserConfigurationException, SAXException, IOException, SQLException, ClassNotFoundException{
 		long startTime = System.nanoTime();
 		DataBaseConnector.openConnection();
-		sendGame();
+		sendTeams();
 		DataBaseConnector.closeConnection();
 		long endTime = System.nanoTime();
 		System.out.println("Took "+(endTime - startTime)/Math.pow(10,9) + " seconds");
