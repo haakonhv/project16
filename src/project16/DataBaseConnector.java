@@ -58,6 +58,10 @@ public class DataBaseConnector {
 			else if(table.equals("Player")){
 				sql = "INSERT INTO PLAYER "+ values;
 			}
+			else if(table.equals("TEAM")){
+				sql = "INSERT INTO TEAM " +
+						"VALUES ("+values+")";
+			}
 
 
 
