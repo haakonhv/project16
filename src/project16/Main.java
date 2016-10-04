@@ -23,7 +23,11 @@ public class Main{
 		ArrayList<Event> eventList = MyDomParser.getEventList(doc, game);
 		MyDomParser parser = new MyDomParser(eventList, doc, game);
 		String gameID =  Integer.toString(parser.game.id);
-		DataBaseConnector.insert("GAME", gameID);
+		String homeID = Integer.toString(parser.game.getHome_team_id());
+		String awayID = Integer.toString(parser.game.getAway_team_id());
+		String matchday = Integer.toString(parser.game.getMatchday());
+		String season = Integer.toString(parser.game.getSeason_id());
+		DataBaseConnector.insert("GAME", gameID+","+homeID+","+awayID+","+matchday+","+season);
 
 
 
@@ -112,7 +116,11 @@ public class Main{
 		ArrayList<Event> eventList = MyDomParser.getEventList(doc, game);
 		MyDomParser parser = new MyDomParser(eventList, doc, game);
 		String gameID =  Integer.toString(parser.game.id);
-		DataBaseConnector.insert("GAME", gameID);
+		String homeID = Integer.toString(parser.game.getHome_team_id());
+		String awayID = Integer.toString(parser.game.getAway_team_id());
+		String matchday = Integer.toString(parser.game.getMatchday());
+		String season = Integer.toString(parser.game.getSeason_id());
+		DataBaseConnector.insert("GAME", gameID+","+homeID+","+awayID+","+matchday+","+season);
 		for(int i=0; i<eventList.size();i++){
 			Event e = eventList.get(i);
 			String eventID =  Integer.toString(parser.eventList.get(i).id);
@@ -155,7 +163,7 @@ public class Main{
 	public static void main(String[] args) throws ParserConfigurationException, SAXException, IOException, SQLException, ClassNotFoundException{
 		long startTime = System.nanoTime();
 		DataBaseConnector.openConnection();
-		buildDatabase();
+		sendGame();
 		DataBaseConnector.closeConnection();
 		long endTime = System.nanoTime();
 		System.out.println("Took "+(endTime - startTime)/Math.pow(10,9) + " seconds");

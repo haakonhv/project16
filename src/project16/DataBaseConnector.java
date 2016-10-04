@@ -32,7 +32,7 @@ public class DataBaseConnector {
 			String sql = null;
 
 			if(table.equals("GAME")){
-				sql = "INSERT INTO GAME (Game_id) " +
+				sql = "INSERT INTO GAME " +
 						"VALUES ("+values+")";
 			}
 			else if(table.equals("EVENT")){
