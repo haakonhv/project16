@@ -55,6 +55,9 @@ public class DataBaseConnector {
 				sql = "INSERT INTO VALUE (Q_id) " +
 						"VALUES ("+values+")";
 			}
+			else if(table.equals("Player")){
+				sql = "INSERT INTO PLAYER "+ values;
+			}
 
 
 
