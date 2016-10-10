@@ -176,6 +176,7 @@ public class Main{
 	public static void main(String[] args) throws ParserConfigurationException, SAXException, IOException, SQLException, ClassNotFoundException{
 		long startTime = System.nanoTime();
 		DataBaseConnector.openConnection();
+		sendGame();
 		buildDatabase();
 		DataBaseConnector.closeConnection();
 		long endTime = System.nanoTime();
