@@ -79,29 +79,9 @@ public class MyDomParser {
          	event.setQualifierList(getQualifierList(xmlEvent.getAttribute("id"),xmlEventList));
 
          	eventList.add(event);
-         	if (xmlEvent.getAttribute("type_id").equals("6")){
-         		originalnumber=generateCorner(xmlEventList, event, originalnumber);
-         	}
          }
          return eventList;
     }
-
-	public static int generateCorner(NodeList xmlEventList, Event event, int lastcorner){
-		int originalnumber=lastcorner;
-		if(originalnumber== -1 || event.getNumber()!=originalnumber+1){
-			System.out.println(originalnumber);
-			originalnumber=event.getNumber();
-			Corner corner = new Corner();
-			corner.setEvent_id(event.getId());
-			System.out.println(corner.getEvent_id());
-		}
-		return originalnumber;
-	}
-
-
-
-
-
 
 	//Henter Qualifiers fra et bestemt Event. Oppretter Qualifier-objekter, setter feltene, legger de til objektene i en ArrayList og returnerer denne.
 	public static ArrayList<Qualifier> getQualifierList(String eventId, NodeList eventList){
