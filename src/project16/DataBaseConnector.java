@@ -36,7 +36,7 @@ public class DataBaseConnector {
 						"VALUES ("+values+")";
 			}
 			else if(table.equals("EVENT")){
-				sql = "INSERT INTO EVENT (Event_id,Value,Xstart,Ystart,Game_id) " +
+				sql = "INSERT INTO EVENT " +
 						"VALUES ("+values+")";
 			}
 			else if(table.equals("QUALIFIER")){

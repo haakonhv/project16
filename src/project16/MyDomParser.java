@@ -46,6 +46,10 @@ public class MyDomParser {
         Node gameNode = doc.getElementsByTagName("Game").item(0); //Game-noden er det første og eneste elementet med TagName "Game"
         Element gameElement = (Element) gameNode;  //Node castes til Element for å kunne bruke getAttribute()
         game.setId(Integer.parseInt(gameElement.getAttribute("id")));
+        game.setHome_team_id(Integer.parseInt(gameElement.getAttribute("home_team_id")));
+        game.setAway_team_id(Integer.parseInt(gameElement.getAttribute("away_team_id")));
+        game.setMatchday(Integer.parseInt(gameElement.getAttribute("matchday")));
+        game.setSeason_id(Integer.parseInt(gameElement.getAttribute("season_id")));
         return game;
     }
 
@@ -63,6 +67,9 @@ public class MyDomParser {
          	if(xmlEvent.hasAttribute("player_id")){
          		event.setPlayerid(Integer.parseInt(xmlEvent.getAttribute("player_id")));
          	}
+         	else{
+         		event.setPlayerid(0);
+         	}
          	if(xmlEvent.hasAttribute("team_id")){
          		event.setTeamid(Integer.parseInt(xmlEvent.getAttribute("team_id")));
          	}
@@ -70,7 +77,7 @@ public class MyDomParser {
          	event.setXstart(Float.parseFloat(xmlEvent.getAttribute("x")));
          	event.setYstart(Float.parseFloat(xmlEvent.getAttribute("y")));
          	event.setQualifierList(getQualifierList(xmlEvent.getAttribute("id"),xmlEventList));
-         	
+
          	eventList.add(event);
          	if (xmlEvent.getAttribute("type_id").equals("6")){
          		originalnumber=generateCorner(xmlEventList, event, originalnumber);
@@ -78,7 +85,7 @@ public class MyDomParser {
          }
          return eventList;
     }
-	
+
 	public static int generateCorner(NodeList xmlEventList, Event event, int lastcorner){
 		int originalnumber=lastcorner;
 		if(originalnumber== -1 || event.getNumber()!=originalnumber+1){
@@ -90,7 +97,7 @@ public class MyDomParser {
 		}
 		return originalnumber;
 	}
-		
+
 
 
 

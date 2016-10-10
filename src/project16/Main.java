@@ -135,7 +135,8 @@ public class Main{
 			String playerID =  Integer.toString(parser.eventList.get(i).playerid);
 			String xStart =  Float.toString(parser.eventList.get(i).xstart);
 			String yStart =  Float.toString(parser.eventList.get(i).ystart);
-			String values = eventID+","+typeID+","+xStart+","+yStart+","+gameID;
+			String number = Float.toString(parser.eventList.get(i).number);
+			String values = eventID+","+typeID+","+teamID+","+playerID+","+xStart+","+yStart+","+gameID+","+number;
 			DataBaseConnector.insert("EVENT", values);
 			for (int j=0; j<e.getQualifierList().size();j++){
 				Qualifier thisQual = parser.eventList.get(i).getQualifierList().get(j);
@@ -203,13 +204,13 @@ public class Main{
 	public static void main(String[] args) throws ParserConfigurationException, SAXException, IOException, SQLException, ClassNotFoundException{
 		long startTime = System.nanoTime();
 		DataBaseConnector.openConnection();
-		sendTeams();
+		buildDatabase();
 		DataBaseConnector.closeConnection();
 		long endTime = System.nanoTime();
 		System.out.println("Took "+(endTime - startTime)/Math.pow(10,9) + " seconds");
 
-		
-		
+
+
 	}
 
 
