@@ -126,7 +126,9 @@ public class Main{
 		String awayID = Integer.toString(parser.game.getAway_team_id());
 		String matchday = Integer.toString(parser.game.getMatchday());
 		String season = Integer.toString(parser.game.getSeason_id());
-		DataBaseConnector.insert("GAME", gameID+","+homeID+","+awayID+","+matchday+","+season);
+		//DataBaseConnector.insert("GAME", gameID+","+homeID+","+awayID+","+matchday+","+season);
+		int cornerhelp = -1;
+		int cornercount=0;
 		for(int i=0; i<eventList.size();i++){
 			Event e = eventList.get(i);
 			String eventID =  Integer.toString(parser.eventList.get(i).id);
@@ -137,34 +139,151 @@ public class Main{
 			String yStart =  Float.toString(parser.eventList.get(i).ystart);
 			String number = Float.toString(parser.eventList.get(i).number);
 			String values = eventID+","+typeID+","+teamID+","+playerID+","+xStart+","+yStart+","+gameID+","+number;
-			DataBaseConnector.insert("EVENT", values);
-			for (int j=0; j<e.getQualifierList().size();j++){
-				Qualifier thisQual = parser.eventList.get(i).getQualifierList().get(j);
+			//DataBaseConnector.insert("EVENT", values);
+			ArrayList<Qualifier> qualifierList = e.getQualifierList();
+			if (e.getValue()==6){
+				if (cornerhelp==-1 || e.getNumber()!=cornerhelp+1){
+					cornerhelp=e.getNumber();
+					cornercount +=1;
+					CreateCorner(qualifierList, eventList, e, i);
+				}
+				
+				
+			}
+			
+			for (int j=0; j<qualifierList.size();j++){
+				Qualifier thisQual = parser.eventList.get(i).qualifierList.get(j);
 				String qID = Integer.toString(thisQual.id);
 				String qualifierID = Integer.toString(thisQual.qualifier_id);
 				values = qID+","+qualifierID+","+eventID;
-				DataBaseConnector.insert("QUALIFIER", values);
+				//DataBaseConnector.insert("QUALIFIER", values);
+
+
+				
+				
 				if(thisQual.values!=null){
 					for(int k=0; k<thisQual.values.size(); k++){
 						String thisValue = thisQual.values.get(k);
 						try{
 							Float floatValue = Float.parseFloat(thisValue);
-							DataBaseConnector.insert("VALUE_F", qID+","+thisValue);
+					//		DataBaseConnector.insert("VALUE_F", qID+","+thisValue);
 						}
 						catch(NumberFormatException nfe_ex){
-							DataBaseConnector.insert("VALUE_S", qID+","+"'"+thisValue+"'");
+						//	DataBaseConnector.insert("VALUE_S", qID+","+"'"+thisValue+"'");
 						}
 					}
 
 				}
 				else{
 					qID = Integer.toString(thisQual.id);
-					DataBaseConnector.insert("VALUE_N", qID);
+					//DataBaseConnector.insert("VALUE_N", qID);
 
 				}
 
 			}
 		}
+		System.out.println(cornercount);
+	}
+	
+	public static void CreateCorner(ArrayList<Qualifier> qualifierList, ArrayList<Event> eventList, Event event, int i){
+		Corner corner = new Corner();
+
+		for (Qualifier qual:qualifierList){
+			if(qual.getQualifier_id()==219){
+				corner.setFar_post(1);
+				corner.setFirst_post(1);
+				break;
+			}
+			else if(qual.getQualifier_id()==220){
+				corner.setFirst_post(1);
+				corner.setFar_post(0);
+				break;
+			}
+			else if(qual.getQualifier_id()==221){
+				corner.setFirst_post(0);
+				corner.setFar_post(1);
+				break;
+			}
+			else if(qual.getQualifier_id()==222){
+				corner.setFirst_post(0);
+				corner.setFar_post(0);
+				break;
+			}
+		}
+		ArrayList<Qualifier> nexteventlist = eventList.get(i+1).getQualifierList();
+		for (Qualifier qual:nexteventlist){
+			if(qual.getQualifier_id()==219){
+				corner.setFar_post(1);
+				corner.setFirst_post(1);
+				break;
+			}
+			else if(qual.getQualifier_id()==220){
+				corner.setFirst_post(1);
+				corner.setFar_post(0);
+				break;
+			}
+			else if(qual.getQualifier_id()==221){
+				corner.setFirst_post(0);
+				corner.setFar_post(1);
+				break;
+			}
+			else if(qual.getQualifier_id()==222){
+				corner.setFirst_post(0);
+				corner.setFar_post(0);
+				break;
+			}
+		}
+		boolean taken = false;
+		while(!taken){
+			if(eventList.get(i+1).getValue()==1){
+				taken=true;
+				ArrayList<Qualifier> takenlist=eventList.get(i+1).getQualifierList();
+				boolean xdone=false;
+				boolean ydone=false;
+				boolean laterality=false;
+				corner.setEvent_id(event.getId());
+				System.out.println(event.getYstart());
+				
+				for (Qualifier qual:takenlist){
+					if (qual.getQualifier_id()==140){
+						corner.setKoord_x(Float.parseFloat(qual.getValues().get(0)));
+						xdone=true;
+					}
+					else if (qual.getQualifier_id()==141){
+						corner.setKoord_y(Float.parseFloat(qual.getValues().get(0)));
+						ydone=true;
+					}
+					else if (qual.getQualifier_id()==223){
+						corner.setInswing(1);
+						laterality=true;
+					}
+					else if (qual.getQualifier_id()==224){
+						corner.setOutswing(1);
+						laterality=true;
+					}
+					else if (qual.getQualifier_id()==225){
+						corner.setStraight(1);
+						laterality=true;
+					}
+					if(xdone==true && ydone==true && laterality==true){
+						break;
+					}
+				}
+			}
+			else{
+				i+=1;
+			}
+		}
+		float ystart=eventList.get(i+1).getYstart();
+		if(ystart>99){
+			corner.setLeft(1);
+			corner.setLength(ystart-corner.getKoord_y());
+		}
+		else if(ystart<1){
+			corner.setRight(1);
+			corner.setLength(ystart+corner.getKoord_y());
+		}
+		System.out.println(corner.toString());
 	}
 
 	public static void sendTeams() throws ParserConfigurationException, SAXException, IOException, SQLException{
@@ -203,9 +322,11 @@ public class Main{
 
 	public static void main(String[] args) throws ParserConfigurationException, SAXException, IOException, SQLException, ClassNotFoundException{
 		long startTime = System.nanoTime();
+
 		DataBaseConnector.openConnection();
 		sendTeams();
 		DataBaseConnector.closeConnection();
+
 		long endTime = System.nanoTime();
 		System.out.println("Took "+(endTime - startTime)/Math.pow(10,9) + " seconds");
 
