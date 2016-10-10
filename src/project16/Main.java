@@ -168,7 +168,7 @@ public class Main{
 	}
 
 	public static void sendTeams() throws ParserConfigurationException, SAXException, IOException, SQLException{
-		Document doc = MyDomParser.getDocument("srml-90-2014-squads.xml");
+		Document doc = MyDomParser.getDocument("srml-90-2016-squads.xml");
 		NodeList teams = doc.getElementsByTagName("Team");
 
 		for(int i=0; i<teams.getLength();i++){
@@ -204,7 +204,7 @@ public class Main{
 	public static void main(String[] args) throws ParserConfigurationException, SAXException, IOException, SQLException, ClassNotFoundException{
 		long startTime = System.nanoTime();
 		DataBaseConnector.openConnection();
-		buildDatabase();
+		sendTeams();
 		DataBaseConnector.closeConnection();
 		long endTime = System.nanoTime();
 		System.out.println("Took "+(endTime - startTime)/Math.pow(10,9) + " seconds");
