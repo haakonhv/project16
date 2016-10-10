@@ -65,7 +65,12 @@ public class DataBaseConnector {
 
 
 
-			stmt.executeUpdate(sql);
+			try{
+				stmt.executeUpdate(sql);
+			}
+			catch (Exception e){
+
+			}
 
 			System.out.println("Inserted records into the table...");
 

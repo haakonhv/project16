@@ -13,7 +13,7 @@ import org.xml.sax.SAXException;
 
 public class Readplayers {
 	public static Document doc;
-	
+
 	public static void main(String[] args) {
 		try {
 			DataBaseConnector.openConnection();
@@ -27,17 +27,17 @@ public class Readplayers {
 		try {
 			Document doc = MyDomParser.getDocument("srml-90-2014-squads.xml");
 			NodeList players = doc.getElementsByTagName("Player");
-			
+
 			for(int i = 0; i < players.getLength(); i++){
 				Element p = (Element)players.item(i);
 				Player player = new Player();
 				String uid=p.getAttribute("uID");
 				uid = uid.replace("p", "");
 				player.setId(Integer.parseInt(uid));
-				
+
 				String columns = "(Player_id";
 				String values = "("+"'"+uid+"'";
-				
+
 				NodeList stats = p.getElementsByTagName("Stat");
 				for (int j=0;j<stats.getLength();j++){
 					if(stats.item(j).getNodeType()!=Node.ELEMENT_NODE){
@@ -57,9 +57,9 @@ public class Readplayers {
 					}
 					else if (s.getAttribute("Type").equals("birth_date")){
 						String birth = s.getTextContent();
-						if (!birth.equals("Unknown")){	
+						if (!birth.equals("Unknown")){
 							player.setBirth_year(Integer.parseInt(birth.substring(0, 4)));
-							columns+=", Birth_year";	
+							columns+=", Birth_year";
 							values+=", "+"'"+birth.substring(0,4)+"'";
 							}
 					}
@@ -100,16 +100,16 @@ public class Readplayers {
 				//System.out.println(player.toString());
 				System.out.println(sqlString);
 			//	System.out.println(values);
-				
-				
-				
-				
+
+
+
+
 			}
-			
-			
-			
-			
-			
+
+
+
+
+
 		} catch (ParserConfigurationException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -127,7 +127,7 @@ public class Readplayers {
 			e.printStackTrace();
 		}
 	}
-	
-	
-	
+
+
+
 }
