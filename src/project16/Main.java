@@ -68,6 +68,8 @@ public class Main{
 				String values = qID+","+qualifierID+","+eventID;
 				DataBaseConnector.insert("QUALIFIER", values);
 
+				
+
 			}
 		}
 
@@ -120,7 +122,8 @@ public class Main{
 		String awayID = Integer.toString(parser.game.getAway_team_id());
 		String matchday = Integer.toString(parser.game.getMatchday());
 		String season = Integer.toString(parser.game.getSeason_id());
-		DataBaseConnector.insert("GAME", gameID+","+homeID+","+awayID+","+matchday+","+season);
+		//DataBaseConnector.insert("GAME", gameID+","+homeID+","+awayID+","+matchday+","+season);
+		int cornerhelp=1; //hjelpevariabel for å finne cornere
 		for(int i=0; i<eventList.size();i++){
 			Event e = eventList.get(i);
 			String eventID =  Integer.toString(parser.eventList.get(i).id);
@@ -130,29 +133,39 @@ public class Main{
 			String xStart =  Float.toString(parser.eventList.get(i).xstart);
 			String yStart =  Float.toString(parser.eventList.get(i).ystart);
 			String values = eventID+","+typeID+","+xStart+","+yStart+","+gameID;
-			DataBaseConnector.insert("EVENT", values);
+			//DataBaseConnector.insert("EVENT", values);
 			for (int j=0; j<e.getQualifierList().size();j++){
 				Qualifier thisQual = parser.eventList.get(i).getQualifierList().get(j);
 				String qID = Integer.toString(thisQual.id);
 				String qualifierID = Integer.toString(thisQual.qualifier_id);
 				values = qID+","+qualifierID+","+eventID;
-				DataBaseConnector.insert("QUALIFIER", values);
+				//DataBaseConnector.insert("QUALIFIER", values);
+				if (qualifierID.equals("6")){
+					if(cornerhelp== -1 || i!=cornerhelp+1){
+						System.out.println(cornerhelp);
+						cornerhelp=e.getNumber();
+						Corner corner = new Corner();
+						corner.setEvent_id(e.getId());
+						System.out.println(corner.getEvent_id());
+//							corner.setFirst_post(1);
+					}
+				}
 				if(thisQual.values!=null){
 					for(int k=0; k<thisQual.values.size(); k++){
 						String thisValue = thisQual.values.get(k);
 						try{
 							Float floatValue = Float.parseFloat(thisValue);
-							DataBaseConnector.insert("VALUE_F", qID+","+thisValue);
+							//DataBaseConnector.insert("VALUE_F", qID+","+thisValue);
 						}
 						catch(NumberFormatException nfe_ex){
-							DataBaseConnector.insert("VALUE_S", qID+","+"'"+thisValue+"'");
+							//DataBaseConnector.insert("VALUE_S", qID+","+"'"+thisValue+"'");
 						}
 					}
 
 				}
 				else{
 					qID = Integer.toString(thisQual.id);
-					DataBaseConnector.insert("VALUE_N", qID);
+					//DataBaseConnector.insert("VALUE_N", qID);
 
 				}
 
@@ -162,9 +175,9 @@ public class Main{
 
 	public static void main(String[] args) throws ParserConfigurationException, SAXException, IOException, SQLException, ClassNotFoundException{
 		long startTime = System.nanoTime();
-		DataBaseConnector.openConnection();
-		sendGame();
-		DataBaseConnector.closeConnection();
+		//DataBaseConnector.openConnection();
+		buildDatabase();
+		//DataBaseConnector.closeConnection();
 		long endTime = System.nanoTime();
 		System.out.println("Took "+(endTime - startTime)/Math.pow(10,9) + " seconds");
 
