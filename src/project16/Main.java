@@ -133,7 +133,7 @@ public class Main{
 			String xStart =  Float.toString(parser.eventList.get(i).xstart);
 			String yStart =  Float.toString(parser.eventList.get(i).ystart);
 			String values = eventID+","+typeID+","+xStart+","+yStart+","+gameID;
-			//DataBaseConnector.insert("EVENT", values);
+			DataBaseConnector.insert("EVENT", values);
 			for (int j=0; j<e.getQualifierList().size();j++){
 				Qualifier thisQual = parser.eventList.get(i).getQualifierList().get(j);
 				String qID = Integer.toString(thisQual.id);
