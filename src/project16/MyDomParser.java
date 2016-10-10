@@ -73,13 +73,13 @@ public class MyDomParser {
          	
          	eventList.add(event);
          	if (xmlEvent.getAttribute("type_id").equals("6")){
-         		originalnumber=generateCorner(event, originalnumber);
+         		originalnumber=generateCorner(xmlEventList, event, originalnumber);
          	}
          }
          return eventList;
     }
 	
-	public static int generateCorner(Event event, int lastcorner){
+	public static int generateCorner(NodeList xmlEventList, Event event, int lastcorner){
 		int originalnumber=lastcorner;
 		if(originalnumber== -1 || event.getNumber()!=originalnumber+1){
 			System.out.println(originalnumber);
