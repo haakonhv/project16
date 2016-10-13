@@ -8,6 +8,11 @@ public class Corner {
 	int right=0;
 	int left=0;
 	float length;
+	float koord_x;
+	float koord_y;
+	int first_post; //binary
+	int far_post; //binary
+	int event_id; //foreign key
 	public float getLength() {
 		return length;
 	}
@@ -49,11 +54,7 @@ public class Corner {
 	public void setStraight(int straight) {
 		this.straight = straight;
 	}
-	float koord_x;
-	float koord_y;
-	int first_post; //binary
-	int far_post; //binary
-	int event_id; //foreign key
+
 	public int getCorner_id() {
 		return corner_id;
 	}

@@ -25,7 +25,7 @@ public class DataBaseConnector {
 
 
 
-			System.out.println("Inserting records into the table...");
+			//System.out.println("Inserting records into the table...");
 
 			stmt = conn.createStatement();
 
@@ -62,17 +62,20 @@ public class DataBaseConnector {
 				sql = "INSERT INTO TEAM " +
 						"VALUES ("+values+")";
 			}
-
-
-
-			try{
-				stmt.executeUpdate(sql);
-			}
-			catch (Exception e){
-
+			else if(table.equals("Corner")){
+				sql = "INSERT INTO CORNER "+ values;
 			}
 
-			System.out.println("Inserted records into the table...");
+
+
+//			try{
+			stmt.executeUpdate(sql);
+//			}
+//			catch (Exception e){
+//
+//			}
+
+			//System.out.println("Inserted records into the table...");
 
 
 
