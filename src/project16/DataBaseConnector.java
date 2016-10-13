@@ -80,6 +80,12 @@ public class DataBaseConnector {
 
 
 	}
+	
+	public static ResultSet SelectPlayer(String Statement) throws SQLException{
+		Statement stmt=conn.createStatement();
+		ResultSet rs=stmt.executeQuery(Statement);
+		return rs;
+	}
 
 	public static void openConnection() throws ClassNotFoundException, SQLException {
 

@@ -2,6 +2,7 @@ package project16;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.xml.parsers.ParserConfigurationException;
 
@@ -129,6 +130,15 @@ public class Main{
 		DataBaseConnector.insert("GAME", gameID+","+homeID+","+awayID+","+matchday+","+season);
 		int cornerhelp = -1;
 		int cornercount=0;
+		ArrayList<String> homePlayersID = new ArrayList<String>();
+		ArrayList<Integer> homePlayersHeight = new ArrayList<Integer>();
+		ArrayList<String> awayPlayersID = new ArrayList<String>();
+		ArrayList<Integer> awayPlayersHeight = new ArrayList<Integer>();
+		int homegk=0;
+		int awaygk=0;
+		String homeHeightStatement = "SELECT Height FROM PLAYER WHERE Player_id IN (";
+		String awayHeightStatement = "SELECT Height FROM PLAYER WHERE Player_id IN (";
+		
 		for(int i=0; i<eventList.size();i++){
 			Event e = eventList.get(i);
 			String eventID =  Integer.toString(parser.eventList.get(i).id);
@@ -157,10 +167,42 @@ public class Main{
 				String qualifierID = Integer.toString(thisQual.qualifier_id);
 				values = qID+","+qualifierID+","+eventID;
 				DataBaseConnector.insert("QUALIFIER", values);
+				if (i== 0& qualifierID.equals("30")){ //registrerer spillere i troppen
+					List<String> players = thisQual.getValues();
+					ResultSet gk =DataBaseConnector.SelectPlayer("SELECT Height FROM PLAYER WHERE Player_id="+players.get(0));
+					while (gk.next()){
+						homegk=gk.getInt("Height");
+					}
+					for (int y=1;y<players.size(); y++){
+						homePlayersID.add(players.get(y));
+						homeHeightStatement+=players.get(y)+",";	
+					}
+					homeHeightStatement = homeHeightStatement.substring(0, homeHeightStatement.length()-1) +")";
+					ResultSet rs=DataBaseConnector.SelectPlayer(homeHeightStatement);
+					while(rs.next()){
+						int height=rs.getInt("Height");
+						homePlayersHeight.add(height);
+					}
+				}	
+				if (i==1 & qualifierID.equals("30")){
+					List<String> players = thisQual.getValues();
+					ResultSet gk =DataBaseConnector.SelectPlayer("SELECT Height FROM PLAYER WHERE Player_id="+players.get(0));
+					while (gk.next()){
+						awaygk=gk.getInt("Height");
+					}
+					for (int y=1;y<players.size();y++){
+						awayPlayersID.add(players.get(y));
+						awayHeightStatement+=players.get(y)+",";
+						
+					}
+					awayHeightStatement = awayHeightStatement.substring(0, awayHeightStatement.length()-1)+")";
+					ResultSet rs=DataBaseConnector.SelectPlayer(awayHeightStatement);
+					while(rs.next()){
+						int height=rs.getInt("Height");
+						awayPlayersHeight.add(height);
+					}
+				}
 
-
-				
-				
 				if(thisQual.values!=null){
 					for(int k=0; k<thisQual.values.size(); k++){
 						String thisValue = thisQual.values.get(k);
@@ -182,11 +224,9 @@ public class Main{
 
 			}
 		}
-		System.out.println(cornercount);
 	}
 	
 	public static void CreateCorner(ArrayList<Qualifier> qualifierList, ArrayList<Event> eventList, Event event, int i){
-		System.out.println("Corner");
 		Corner corner = new Corner();
 		String column = "";
 		String values ="";
@@ -261,7 +301,6 @@ public class Main{
 				boolean ydone=false;
 				boolean laterality=false;
 				corner.setEvent_id(event.getId());
-				System.out.println(event.getYstart());
 				column+=",Event_id";
 				values+=","+Integer.toString(event.getId());
 				
@@ -319,17 +358,15 @@ public class Main{
 			column+=",Right_side,Left_side";
 			values+=",1,0";
 		}
-		System.out.println(corner.toString());
 		String sqlString="("+column+")"+" VALUES " +"("+values+")";
-		System.out.println(sqlString);
 		try {
-			System.out.println("test");
 			DataBaseConnector.insert("Corner", sqlString);
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
+
 
 	public static void sendTeams() throws ParserConfigurationException, SAXException, IOException, SQLException{
 		Document doc = MyDomParser.getDocument("srml-90-2016-squads.xml");
@@ -356,7 +393,6 @@ public class Main{
 				uid = uid.replace("t", "");
 				team.setId(Integer.parseInt(uid));
 				team.setName(c.getTextContent());
-				System.out.println(team.getName());
 				String values = team.getId()+","+"'"+team.getName()+"'";
 				DataBaseConnector.insert("TEAM", values);
 			}
