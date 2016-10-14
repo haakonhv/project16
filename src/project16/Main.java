@@ -139,7 +139,8 @@ public class Main{
 		String awayHeightStatement = "SELECT Height FROM PLAYER WHERE Player_id IN (";
 		int homeTall=0;
 		int awayTall=0;
-		
+
+
 		for(int i=0; i<eventList.size();i++){
 			Event e = eventList.get(i);
 			String eventID =  Integer.toString(parser.eventList.get(i).id);
@@ -156,10 +157,11 @@ public class Main{
 				if (cornerhelp==-1 || e.getNumber()!=cornerhelp+1){
 					cornerhelp=e.getNumber();
 						CreateCorner(qualifierList, eventList, e, i, homeTall, awayTall, homegk, awaygk, game.getHome_team_id(),game.getAway_team_id());
-	
+
 				}
+
 			}
-			
+
 			for (int j=0; j<qualifierList.size();j++){
 				Qualifier thisQual = parser.eventList.get(i).qualifierList.get(j);
 				String qID = Integer.toString(thisQual.id);
@@ -172,7 +174,7 @@ public class Main{
 					gk.next();
 					for (int y=1;y<11; y++){
 						homePlayersID.add(players.get(y));
-						homeHeightStatement+=players.get(y)+",";	
+						homeHeightStatement+=players.get(y)+",";
 					}
 					homeHeightStatement = homeHeightStatement.substring(0, homeHeightStatement.length()-1) +")";
 					ResultSet rs=DataBaseConnector.SelectPlayer(homeHeightStatement);
@@ -181,17 +183,18 @@ public class Main{
 						homePlayersHeight.add(height);
 					}
 					homeTall=countTallPlayers(homePlayersHeight);
-				}	
+				}
+
 				if (i==1 & qualifierID.equals("30")){
 					List<String> players = thisQual.getValues();
 					ResultSet gk =DataBaseConnector.SelectPlayer("SELECT Height FROM PLAYER WHERE Player_id="+players.get(0));
 					gk.next();
 					awaygk=gk.getInt("Height");
-					
+
 					for (int y=1;y<11;y++){
 						awayPlayersID.add(players.get(y));
 						awayHeightStatement+=players.get(y)+",";
-						
+
 					}
 					awayHeightStatement = awayHeightStatement.substring(0, awayHeightStatement.length()-1)+")";
 					ResultSet rs=DataBaseConnector.SelectPlayer(awayHeightStatement);
@@ -224,7 +227,8 @@ public class Main{
 			}
 		}
 	}
-	
+
+
 	public static void CreateCorner(ArrayList<Qualifier> qualifierList, ArrayList<Event> eventList, Event event, int i, int homeTall, int awayTall, int homegk, int awaygk, int homeID, int awayID){
 		Corner corner = new Corner();
 		String column = "";
@@ -302,7 +306,7 @@ public class Main{
 				if (cornerTeamID==homeID){
 					column+=",Gk_height,attack_tall,defend_tall";
 					values+=","+awaygk+","+homeTall+","+awayTall;
-					
+
 				}
 				else{
 					column+=",Gk_height,attack_tall,defend_tall";
@@ -315,8 +319,8 @@ public class Main{
 				corner.setEvent_id(event.getId());
 				column+=",Event_id";
 				values+=","+Integer.toString(event.getId());
-				int directshot=CheckShot(eventList.get(i+2)); //setter binærvariabelen=1 hvis første hendelse er skudd
-				int directgoal = CheckGoal(eventList.get(i+2)); //som over for mål
+				int directshot=CheckShot(eventList.get(i+2)); //setter binï¿½rvariabelen=1 hvis fï¿½rste hendelse er skudd
+				int directgoal = CheckGoal(eventList.get(i+2)); //som over for mï¿½l
 				int indirectshot=0;
 				int indirectgoal=0;
 				column+=",Directshot,Directgoal";
@@ -384,7 +388,7 @@ public class Main{
 			corner.setLength(ystart-corner.getKoord_y());
 			column+=",Right_side,Left_side";
 			values+=",0,1";
-			
+
 		}
 		else if(ystart<50){
 			corner.setRight(1);
@@ -400,15 +404,15 @@ public class Main{
 			e.printStackTrace();
 		}
 	}
-	
+
 	private static boolean checkIfFinished(ArrayList<Event> eventList, int j, int cornerTeamID) {
 		Event event = eventList.get(j);
 		int type = event.getValue();
-		if(type==5||type==6||type==4||type==30){//5 indikerer innkast eller utspill fra mål, 6 er ny corner, 4 er forseelse, 30 er omgang ferdig
+		if(type==5||type==6||type==4||type==30){//5 indikerer innkast eller utspill fra mï¿½l, 6 er ny corner, 4 er forseelse, 30 er omgang ferdig
 			return true;
 		}
 		if((event.getTeamid()==cornerTeamID&&event.getXstart()<80) ||(event.getTeamid()!=cornerTeamID&&event.getXstart()>20)){
-			//sjekker om ballen er nærmere midten av banen enn x=80 for angripende lag
+			//sjekker om ballen er nï¿½rmere midten av banen enn x=80 for angripende lag
 			return true;
 		}
 		return false;
@@ -427,10 +431,10 @@ public class Main{
 			return 1;
 		}
 		return 0;
-	
+
 
 	}
-				
+
 	public static void sendTeams() throws ParserConfigurationException, SAXException, IOException, SQLException{
 		Document doc = MyDomParser.getDocument("srml-90-2016-squads.xml");
 		NodeList teams = doc.getElementsByTagName("Team");
@@ -466,15 +470,17 @@ public class Main{
 		for (int i=0;i<List.size();i++){
 			if (List.get(i)>=185){
 				tall++;
-			}	
+			}
 		}
 		return tall;
+
 	}
 
 	public static void main(String[] args) throws ParserConfigurationException, SAXException, IOException, SQLException, ClassNotFoundException{
 		long startTime = System.nanoTime();
 
 		DataBaseConnector.openConnection();
+
 		buildDatabase();
 		DataBaseConnector.closeConnection();
 
