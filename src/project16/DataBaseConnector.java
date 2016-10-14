@@ -80,7 +80,7 @@ public class DataBaseConnector {
 
 
 	}
-	
+
 	public static ResultSet SelectPlayer(String Statement) throws SQLException{
 		Statement stmt=conn.createStatement();
 		ResultSet rs=stmt.executeQuery(Statement);
@@ -104,6 +104,21 @@ public class DataBaseConnector {
 	public static void closeConnection() throws SQLException{
 		conn.close();
 		System.out.println("Connection closed...");
+	}
+
+	public static Connection returnConnection() throws ClassNotFoundException, SQLException {
+
+		Class.forName("com.mysql.jdbc.Driver");
+
+		System.out.println("Connecting to database...");
+
+		conn = DriverManager.getConnection(DB_URL, USER, PASS);
+		System.out.println("Connected database successfully...");
+		return conn;
+
+
+
+
 	}
 
 

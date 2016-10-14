@@ -138,7 +138,7 @@ public class Main{
 		int awaygk=0;
 		String homeHeightStatement = "SELECT Height FROM PLAYER WHERE Player_id IN (";
 		String awayHeightStatement = "SELECT Height FROM PLAYER WHERE Player_id IN (";
-		
+
 		for(int i=0; i<eventList.size();i++){
 			Event e = eventList.get(i);
 			String eventID =  Integer.toString(parser.eventList.get(i).id);
@@ -157,10 +157,10 @@ public class Main{
 					cornercount +=1;
 					CreateCorner(qualifierList, eventList, e, i);
 				}
-				
-				
+
+
 			}
-			
+
 			for (int j=0; j<qualifierList.size();j++){
 				Qualifier thisQual = parser.eventList.get(i).qualifierList.get(j);
 				String qID = Integer.toString(thisQual.id);
@@ -175,7 +175,7 @@ public class Main{
 					}
 					for (int y=1;y<players.size(); y++){
 						homePlayersID.add(players.get(y));
-						homeHeightStatement+=players.get(y)+",";	
+						homeHeightStatement+=players.get(y)+",";
 					}
 					homeHeightStatement = homeHeightStatement.substring(0, homeHeightStatement.length()-1) +")";
 					ResultSet rs=DataBaseConnector.SelectPlayer(homeHeightStatement);
@@ -183,7 +183,7 @@ public class Main{
 						int height=rs.getInt("Height");
 						homePlayersHeight.add(height);
 					}
-				}	
+				}
 				if (i==1 & qualifierID.equals("30")){
 					List<String> players = thisQual.getValues();
 					ResultSet gk =DataBaseConnector.SelectPlayer("SELECT Height FROM PLAYER WHERE Player_id="+players.get(0));
@@ -193,7 +193,7 @@ public class Main{
 					for (int y=1;y<players.size();y++){
 						awayPlayersID.add(players.get(y));
 						awayHeightStatement+=players.get(y)+",";
-						
+
 					}
 					awayHeightStatement = awayHeightStatement.substring(0, awayHeightStatement.length()-1)+")";
 					ResultSet rs=DataBaseConnector.SelectPlayer(awayHeightStatement);
@@ -225,7 +225,7 @@ public class Main{
 			}
 		}
 	}
-	
+
 	public static void CreateCorner(ArrayList<Qualifier> qualifierList, ArrayList<Event> eventList, Event event, int i){
 		Corner corner = new Corner();
 		String column = "";
@@ -303,7 +303,7 @@ public class Main{
 				corner.setEvent_id(event.getId());
 				column+=",Event_id";
 				values+=","+Integer.toString(event.getId());
-				
+
 				for (Qualifier qual:takenlist){
 					if (qual.getQualifier_id()==140){ //xkoordinatet ballen lander
 						corner.setKoord_x(Float.parseFloat(qual.getValues().get(0)));
@@ -350,7 +350,7 @@ public class Main{
 			corner.setLength(ystart-corner.getKoord_y());
 			column+=",Right_side,Left_side";
 			values+=",0,1";
-			
+
 		}
 		else if(ystart<1){
 			corner.setRight(1);
@@ -397,7 +397,7 @@ public class Main{
 				DataBaseConnector.insert("TEAM", values);
 			}
 		}
-		
+
 
 
 	}
@@ -406,7 +406,7 @@ public class Main{
 		long startTime = System.nanoTime();
 
 		DataBaseConnector.openConnection();
-		buildDatabase();
+		
 		DataBaseConnector.closeConnection();
 
 		long endTime = System.nanoTime();
