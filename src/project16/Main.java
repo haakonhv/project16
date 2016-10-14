@@ -481,6 +481,7 @@ public class Main{
 
 		DataBaseConnector.openConnection();
 
+		buildDatabase();
 		DataBaseConnector.closeConnection();
 
 		long endTime = System.nanoTime();
