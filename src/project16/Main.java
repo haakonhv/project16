@@ -406,7 +406,7 @@ public class Main{
 		long startTime = System.nanoTime();
 
 		DataBaseConnector.openConnection();
-		
+		buildDatabase();
 		DataBaseConnector.closeConnection();
 
 		long endTime = System.nanoTime();
