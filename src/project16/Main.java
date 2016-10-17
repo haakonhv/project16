@@ -174,15 +174,7 @@ public class Main{
 					homePlayersHeight.remove(new Integer(out.getInt("Height")));
 				}
 				else{
-//					System.out.println(id);
-//					for (int S:awayPlayersID){
-//						sysout
-//					}
 					awayPlayersID.remove(Integer.toString(id));
-					System.out.println(out.getInt("Height"));
-					for (int x:awayPlayersHeight){
-						System.out.println(x);
-					}
 					awayPlayersHeight.remove(new Integer(out.getInt("Height")));
 				}
 			}
