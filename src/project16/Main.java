@@ -1,5 +1,6 @@
 package project16;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -30,7 +31,11 @@ public class Main{
 	static int away190=0;
 	
 
-	public static String xmlGameFile = "f24-90-2014-739634-eventdetails.xml";;
+
+	public static String xmlGameFile;
+	private static File folder = new File("data_files");
+	private static File[] listOfFiles = folder.listFiles();
+
 
 
 	public static void sendGame() throws ParserConfigurationException, SAXException, IOException, SQLException{
@@ -533,12 +538,20 @@ public class Main{
 		}
 	}
 
+	public static void buildDatabaseAll() throws ParserConfigurationException, SAXException, IOException, SQLException{
+		for(int i = 0; i < listOfFiles.length; i++){
+			buildDatabase(listOfFiles[i].toString());
+			System.out.println("Inserted Game "+(i+1)+" of "+listOfFiles.length);
+		}
+	}
+
 	public static void main(String[] args) throws ParserConfigurationException, SAXException, IOException, SQLException, ClassNotFoundException{
 		long startTime = System.nanoTime();
 
 		DataBaseConnector.openConnection();
 
-		buildDatabase();
+		buildDatabaseAll();
+
 		DataBaseConnector.closeConnection();
 
 		long endTime = System.nanoTime();
