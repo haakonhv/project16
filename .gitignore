@@ -1,6 +1,7 @@
 /bin/
 
-C:\Users\Håkon\workspace\project16\data_files\*
+C:\Users\Håkon\workspace\project16\data_files\
 
-/Users/HaakonHaave/Documents/workspace/project16/data_files/*
+/Users/HaakonHaave/Documents/workspace/project16/data_files/
 
+*.xml
