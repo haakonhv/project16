@@ -83,9 +83,18 @@ public class Readplayers {
 						}
 					}
 					else if (s.getAttribute("Type").equals("country")){
-						player.setCountry(s.getTextContent());
+						String country;
+						if (s.getTextContent().contains("'")){
+							country = s.getTextContent().replace("'", " ");
+							player.setCountry(country);
+						}
+						else{
+							country = s.getTextContent();
+							player.setCountry(country);
+
+						}
 						columns+=", Country";
-						values+=", "+"'"+s.getTextContent()+"'";
+						values+=", "+"'"+country+"'";
 					}
 				}
 				columns+=")";
