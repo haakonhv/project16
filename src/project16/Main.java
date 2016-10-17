@@ -126,7 +126,7 @@ public class Main{
 
 	}
 
-	public static void buildDatabase() throws ParserConfigurationException, SAXException, IOException, SQLException{
+	public static void buildDatabase(String xmlGameFile) throws ParserConfigurationException, SAXException, IOException, SQLException{
 		Document doc = MyDomParser.getDocument(xmlGameFile);
 		Game game = MyDomParser.getGame(doc);
 		ArrayList<Event> eventList = MyDomParser.getEventList(doc, game);
