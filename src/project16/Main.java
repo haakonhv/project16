@@ -21,10 +21,21 @@ import java.lang.Math;
 
 
 public class Main{
+	static int home182=0;
+	static int home185=0;
+	static int home187=0;
+	static int home190=0;
+	static int away182=0;
+	static int away185=0;
+	static int away187=0;
+	static int away190=0;
+	
+
 
 	public static String xmlGameFile;
 	private static File folder = new File("data_files");
 	private static File[] listOfFiles = folder.listFiles();
+
 
 
 	public static void sendGame() throws ParserConfigurationException, SAXException, IOException, SQLException{
@@ -140,9 +151,6 @@ public class Main{
 		int awaygk=0;
 		String homeHeightStatement = "SELECT Height FROM PLAYER WHERE Player_id IN (";
 		String awayHeightStatement = "SELECT Height FROM PLAYER WHERE Player_id IN (";
-		int homeTall=0;
-		int awayTall=0;
-
 
 		for(int i=0; i<eventList.size();i++){
 			Event e = eventList.get(i);
@@ -156,14 +164,41 @@ public class Main{
 			String values = eventID+","+typeID+","+teamID+","+playerID+","+xStart+","+yStart+","+gameID+","+number;
 			DataBaseConnector.insert("EVENT", values);
 			ArrayList<Qualifier> qualifierList = e.getQualifierList();
-			if (e.getValue()==6){
+			if (e.getValue()==6){ //sjekker om event er corner
 				if (cornerhelp==-1 || e.getNumber()!=cornerhelp+1){
 					cornerhelp=e.getNumber();
-						CreateCorner(qualifierList, eventList, e, i, homeTall, awayTall, homegk, awaygk, game.getHome_team_id(),game.getAway_team_id());
-
+						CreateCorner(qualifierList, eventList, e, i, homegk, awaygk, game.getHome_team_id(),game.getAway_team_id());
 				}
-
 			}
+			if (e.getValue()==18){//sjekker om event er spiller ut
+				int id=e.getPlayerid();
+				ResultSet out = DataBaseConnector.SelectPlayer("SELECT Height FROM PLAYER WHERE Player_id="+Integer.toString(id));
+				out.next();
+				if (game.getHome_team_id()==e.getTeamid()){
+					homePlayersID.remove(Integer.toString(id));
+					homePlayersHeight.remove(new Integer(out.getInt("Height")));
+				}
+				else{
+					awayPlayersID.remove(Integer.toString(id));
+					awayPlayersHeight.remove(new Integer(out.getInt("Height")));
+				}
+			}
+			if (e.getValue()==19){
+				int id=e.getPlayerid();
+				ResultSet in =DataBaseConnector.SelectPlayer("SELECT Height FROM PLAYER WHERE Player_id="+Integer.toString(id));
+				in.next();
+				if (game.getHome_team_id()==e.getGameid()){
+					homePlayersID.add(Integer.toString(id));
+					homePlayersHeight.add(in.getInt("Height"));
+					countTallPlayers(homePlayersHeight,0);
+				}
+				else{
+					awayPlayersID.add(Integer.toString(id));
+					awayPlayersHeight.add(in.getInt("Height"));
+					countTallPlayers(awayPlayersHeight,1);
+				}
+			}
+			
 
 			for (int j=0; j<qualifierList.size();j++){
 				Qualifier thisQual = parser.eventList.get(i).qualifierList.get(j);
@@ -175,6 +210,7 @@ public class Main{
 					List<String> players = thisQual.getValues();
 					ResultSet gk =DataBaseConnector.SelectPlayer("SELECT Height FROM PLAYER WHERE Player_id="+players.get(0));
 					gk.next();
+					homegk=gk.getInt("Height");
 					for (int y=1;y<11; y++){
 						homePlayersID.add(players.get(y));
 						homeHeightStatement+=players.get(y)+",";
@@ -185,7 +221,7 @@ public class Main{
 						int height=rs.getInt("Height");
 						homePlayersHeight.add(height);
 					}
-					homeTall=countTallPlayers(homePlayersHeight);
+					countTallPlayers(homePlayersHeight, 0);
 				}
 
 				if (i==1 & qualifierID.equals("30")){
@@ -205,7 +241,7 @@ public class Main{
 						int height=rs.getInt("Height");
 						awayPlayersHeight.add(height);
 					}
-					awayTall=countTallPlayers(awayPlayersHeight);
+					countTallPlayers(awayPlayersHeight, 1);
 				}
 
 				if(thisQual.values!=null){
@@ -231,8 +267,7 @@ public class Main{
 		}
 	}
 
-
-	public static void CreateCorner(ArrayList<Qualifier> qualifierList, ArrayList<Event> eventList, Event event, int i, int homeTall, int awayTall, int homegk, int awaygk, int homeID, int awayID){
+	public static void CreateCorner(ArrayList<Qualifier> qualifierList, ArrayList<Event> eventList, Event event, int i, int homegk, int awaygk, int homeID, int awayID){
 		Corner corner = new Corner();
 		String column = "";
 		String values ="";
@@ -307,13 +342,13 @@ public class Main{
 				cornerTeamID=eventList.get(i+1).getTeamid();
 				values+=","+cornerTeamID;
 				if (cornerTeamID==homeID){
-					column+=",Gk_height,attack_tall,defend_tall";
-					values+=","+awaygk+","+homeTall+","+awayTall;
+					column+=",Gk_height,attack182,attack185,attack187,attack190,defend182,defend185,defend187,defend190";
+					values+=","+awaygk+","+home182+","+home185+","+home187 +","+ home190+","+away182+","+away185+","+away187+","+away190;
 
 				}
 				else{
-					column+=",Gk_height,attack_tall,defend_tall";
-					values+=","+homegk+","+awayTall+","+homeTall;
+					column+=",Gk_height,attack182,attack185,attack187,attack190,defend182,defend185,defend187,defend190";
+					values+=","+homegk+","+away182+","+away185+","+away187+","+away190+","+home182+","+home185+","+home187 +","+ home190;
 				}
 				ArrayList<Qualifier> takenlist=eventList.get(i+1).getQualifierList();
 				boolean xdone=false;
@@ -401,6 +436,7 @@ public class Main{
 		}
 		String sqlString="("+column+")"+" VALUES " +"("+values+")";
 		try {
+			System.out.println(sqlString);
 			DataBaseConnector.insert("Corner", sqlString);
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
@@ -468,15 +504,38 @@ public class Main{
 			}
 		}
 	}
-	public static int countTallPlayers(ArrayList<Integer> List){
-		int tall = 0;
+	public static void countTallPlayers(ArrayList<Integer> List, int team){//int=0 if home, int=1 if away
+		
+		int tall1 = 0;//182
+		int tall2=0;//185
+		int tall3=0;//187
+		int tall4=0;//190
 		for (int i=0;i<List.size();i++){
-			if (List.get(i)>=185){
-				tall++;
+			if (List.get(i)>=190){
+				tall1++;
+				tall2++;
+				tall3++;
+				tall4++;
+			}
+			else if(List.get(i)>=187){
+				tall1++;
+				tall2++;
+				tall3++;
+			}
+			else if(List.get(i)>=185){
+				tall1++;
+				tall2++;
+			}
+			else if(List.get(i)>=182){
+				tall1++;
 			}
 		}
-		return tall;
-
+		if(team==0){
+			home182=tall1;home185=tall2;home187=tall3;home190=tall4;
+		}
+		else{
+			away182=tall1;away185=tall2;away187=tall3;away190=tall4;
+		}
 	}
 
 	public static void buildDatabaseAll() throws ParserConfigurationException, SAXException, IOException, SQLException{
