@@ -179,11 +179,8 @@ public class Main{
 				ResultSet out = DataBaseConnector.SelectPlayer("SELECT Height, Birth_year FROM PLAYER WHERE Player_id="+Integer.toString(id));
 				out.next();
 				if (game.getHome_team_id()==e.getTeamid()){
-					//System.out.println("Home " + homeTotalAge);
 					homePlayersID.remove(Integer.toString(id));
 					homeTotalAge-=game.getSeason_id()-out.getInt("Birth_year");
-					System.out.println("spiller ut home byear "+out.getInt("Birth_year")+" total "+homeTotalAge +" number "+totalHomePlayers);
-					//System.out.println("Spiller ut Home " +homeTotalAge);
 					try{
 											homePlayersHeight.remove(new Integer(out.getInt("Height")));
 					}catch(Exception ex){	
@@ -191,9 +188,7 @@ public class Main{
 				}
 				else{
 					awayPlayersID.remove(Integer.toString(id));
-					//System.out.println("Away "+ awayTotalAge);
 					awayTotalAge-=game.getSeason_id()-out.getInt("Birth_year");
-					//System.out.println("Spiller ut away " + awayTotalAge);
 					try{
 						awayPlayersHeight.remove(new Integer(out.getInt("Height")));
 					}catch(Exception ex){
@@ -208,10 +203,7 @@ public class Main{
 					homePlayersID.add(Integer.toString(id));
 					homePlayersHeight.add(in.getInt("Height"));
 					countTallPlayers(homePlayersHeight,0);
-					homeTotalAge+=game.getSeason_id()-in.getInt("Birth_year");
-					System.out.println(in.getInt("Birth_year"));
 					homeAverageAge=homeTotalAge/totalHomePlayers;
-					System.out.println("Spiller inn home average etter bytte " + homeAverageAge +" "+ e.getId());
 				}
 				else{
 					awayPlayersID.add(Integer.toString(id));
@@ -219,7 +211,6 @@ public class Main{
 					countTallPlayers(awayPlayersHeight,1);
 					awayTotalAge+=game.getSeason_id()-in.getInt("Birth_year");
 					awayAverageAge=awayTotalAge/totalAwayPlayers;
-					System.out.println("Spiller inn away " + awayAverageAge+" "	+ e.getId());
 				}
 			}
 
@@ -251,7 +242,6 @@ public class Main{
 					}
 					homeAverageAge=homeTotalAge/totalHomePlayers;
 					countTallPlayers(homePlayersHeight, 0);
-					System.out.println("Home total start "+ homeAverageAge+" " + e.getId());
 				}
 			
 				if (i==1 & qualifierID.equals("30")){
@@ -277,7 +267,6 @@ public class Main{
 					}
 					countTallPlayers(awayPlayersHeight, 1);
 					awayAverageAge=awayTotalAge/totalAwayPlayers;
-					System.out.println("Away average start " +awayAverageAge+" "+e.getId());
 
 				}
 				
