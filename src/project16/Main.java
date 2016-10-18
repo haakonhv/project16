@@ -177,7 +177,6 @@ public class Main{
 				}
 			}
 			else if (e.getValue()==18){//sjekker om event er spiller ut
-				System.out.println("Spiller ut");
 				int id=e.getPlayerid();
 				ResultSet out = DataBaseConnector.SelectPlayer("SELECT Height, Birth_year FROM PLAYER WHERE Player_id="+Integer.toString(id));
 				out.next();
@@ -199,7 +198,6 @@ public class Main{
 				}
 			}
 			else if (e.getValue()==19){
-				System.out.println("spiller inn");
 				int id=e.getPlayerid();
 				ResultSet in =DataBaseConnector.SelectPlayer("SELECT Height, Birth_year FROM PLAYER WHERE Player_id="+Integer.toString(id));
 				in.next();
@@ -207,7 +205,7 @@ public class Main{
 					homePlayersID.add(Integer.toString(id));
 					homePlayersHeight.add(in.getInt("Height"));
 					countTallPlayers(homePlayersHeight,0);	
-					homeTotalAge=game.getSeason_id()-in.getInt("Birth_year");
+					homeTotalAge+=game.getSeason_id()-in.getInt("Birth_year");
 					homeAverageAge=homeTotalAge/totalHomePlayers;
 				}
 				else{
