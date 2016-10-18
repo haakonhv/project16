@@ -154,6 +154,8 @@ public class Main{
 		float totalAwayPlayers=11;
 		float homeAverageAge=homeTotalAge/totalHomePlayers;
 		float awayAverageAge=awayTotalAge/totalAwayPlayers;
+		int homeGoals=0;
+		int awayGoals=0;
 		
 
 		for(int i=0; i<eventList.size();i++){
@@ -171,7 +173,7 @@ public class Main{
 			if (e.getValue()==6){ //sjekker om event er corner
 				if (cornerhelp==-1 || e.getNumber()!=cornerhelp+1){
 					cornerhelp=e.getNumber();
-						CreateCorner(qualifierList, eventList, e, i, homegk, awaygk, game.getHome_team_id(),game.getAway_team_id(), homeAverageAge, awayAverageAge);
+						CreateCorner(qualifierList, eventList, e, i, homegk, awaygk, game.getHome_team_id(),game.getAway_team_id(), homeAverageAge, awayAverageAge, totalHomePlayers, totalAwayPlayers, homeGoals, awayGoals);
 				}
 			}
 			else if (e.getValue()==18){//sjekker om event er spiller ut
@@ -202,7 +204,8 @@ public class Main{
 				if (game.getHome_team_id()==e.getTeamid()){
 					homePlayersID.add(Integer.toString(id));
 					homePlayersHeight.add(in.getInt("Height"));
-					countTallPlayers(homePlayersHeight,0);
+					countTallPlayers(homePlayersHeight,0);	
+					homeTotalAge+=game.getSeason_id()-in.getInt("Birth_year");
 					homeAverageAge=homeTotalAge/totalHomePlayers;
 				}
 				else{
@@ -224,6 +227,14 @@ public class Main{
 							awayAverageAge=awayTotalAge/totalAwayPlayers;
 						}
 					}
+				}
+			}
+			else if(e.getValue()==16){
+				if(e.getTeamid()==game.getHome_team_id()){
+					homeGoals+=1;
+				}
+				else{
+					awayGoals+=1;
 				}
 			}
 
@@ -306,7 +317,7 @@ public class Main{
 		}
 	}
 
-	public static void CreateCorner(ArrayList<Qualifier> qualifierList, ArrayList<Event> eventList, Event event, int i, int homegk, int awaygk, int homeID, int awayID, float homeAverageAge, float awayAverageAge){
+	public static void CreateCorner(ArrayList<Qualifier> qualifierList, ArrayList<Event> eventList, Event event, int i, int homegk, int awaygk, int homeID, int awayID, float homeAverageAge, float awayAverageAge, float totalHomePlayers, float totalAwayPlayers, int homeGoals, int awayGoals){
 		Corner corner = new Corner();
 		String column = "";
 		String values ="";
@@ -385,13 +396,17 @@ public class Main{
 				cornerTeamID=eventList.get(i+1).getTeamid();
 				values+=cornerTeamID;
 				if (cornerTeamID==homeID){
-					column+=",Gk_height,attack182,attack185,attack187,attack190,defend182,defend185,defend187,defend190, attack_avg_age, def_avg_age";
-					values+=","+awaygk+","+home182+","+home185+","+home187 +","+ home190+","+away182+","+away185+","+away187+","+away190+","+ homeAverageAge +","+awayAverageAge;
+					float mp= totalHomePlayers-totalAwayPlayers;//manpower difference
+					int gd = homeGoals-awayGoals;//goaldifference
+					column+=",Gk_height,attack182,attack185,attack187,attack190,defend182,defend185,defend187,defend190, attack_avg_age, def_avg_age, mp_diff, gd";
+					values+=","+awaygk+","+home182+","+home185+","+home187 +","+ home190+","+away182+","+away185+","+away187+","+away190+","+ homeAverageAge +","+awayAverageAge+","+mp+","+gd;
 
 				}
 				else{
-					column+=",Gk_height,attack182,attack185,attack187,attack190,defend182,defend185,defend187,defend190, attack_avg_age, def_avg_age";
-					values+=","+homegk+","+away182+","+away185+","+away187+","+away190+","+home182+","+home185+","+home187 +","+ home190+","+awayAverageAge+","+homeAverageAge;
+					float mp=totalAwayPlayers-totalHomePlayers; //manpower difference
+					int gd =awayGoals-homeGoals;
+					column+=",Gk_height,attack182,attack185,attack187,attack190,defend182,defend185,defend187,defend190, attack_avg_age, def_avg_age, mp_diff, gd";
+					values+=","+homegk+","+away182+","+away185+","+away187+","+away190+","+home182+","+home185+","+home187 +","+ home190+","+awayAverageAge+","+homeAverageAge+","+mp+","+gd;
 				}
 				ArrayList<Qualifier> takenlist=eventList.get(i+1).getQualifierList();
 				boolean xdone=false;
