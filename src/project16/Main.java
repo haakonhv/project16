@@ -50,9 +50,6 @@ public class Main{
 		String season = Integer.toString(parser.game.getSeason_id());
 		DataBaseConnector.insert("GAME", gameID+","+homeID+","+awayID+","+matchday+","+season);
 
-
-
-
 	}
 
 	public static void sendEvents() throws ParserConfigurationException, SAXException, IOException, SQLException{
@@ -141,6 +138,9 @@ public class Main{
 		String awayID = Integer.toString(parser.game.getAway_team_id());
 		String matchday = Integer.toString(parser.game.getMatchday());
 		String season = Integer.toString(parser.game.getSeason_id());
+		System.out.println(homeID);
+		System.out.println(awayID);
+		System.out.println(gameID);
 		DataBaseConnector.insert("GAME", gameID+","+homeID+","+awayID+","+matchday+","+season);
 		int cornerhelp = -1;
 		ArrayList<String> homePlayersID = new ArrayList<String>();
@@ -149,8 +149,15 @@ public class Main{
 		ArrayList<Integer> awayPlayersHeight = new ArrayList<Integer>();
 		int homegk=0;
 		int awaygk=0;
-		String homeHeightStatement = "SELECT Height FROM PLAYER WHERE Player_id IN (";
-		String awayHeightStatement = "SELECT Height FROM PLAYER WHERE Player_id IN (";
+		String homeHeightStatement = "SELECT Height, Birth_year FROM PLAYER WHERE Player_id IN (";
+		String awayHeightStatement = "SELECT Height, Birth_year FROM PLAYER WHERE Player_id IN (";
+		int homeTotalAge=0;
+		int awayTotalAge=0;
+		int totalHomePlayers=11;
+		int totalAwayPlayers=11;
+		float homeAverageAge=homeTotalAge/totalHomePlayers;
+		float awayAverageAge=awayTotalAge/totalAwayPlayers;
+		
 
 		for(int i=0; i<eventList.size();i++){
 			Event e = eventList.get(i);
@@ -167,35 +174,55 @@ public class Main{
 			if (e.getValue()==6){ //sjekker om event er corner
 				if (cornerhelp==-1 || e.getNumber()!=cornerhelp+1){
 					cornerhelp=e.getNumber();
-						CreateCorner(qualifierList, eventList, e, i, homegk, awaygk, game.getHome_team_id(),game.getAway_team_id());
+						CreateCorner(qualifierList, eventList, e, i, homegk, awaygk, game.getHome_team_id(),game.getAway_team_id(), homeAverageAge, awayAverageAge);
 				}
 			}
 			if (e.getValue()==18){//sjekker om event er spiller ut
 				int id=e.getPlayerid();
-				ResultSet out = DataBaseConnector.SelectPlayer("SELECT Height FROM PLAYER WHERE Player_id="+Integer.toString(id));
+				ResultSet out = DataBaseConnector.SelectPlayer("SELECT Height, Birth_year FROM PLAYER WHERE Player_id="+Integer.toString(id));
 				out.next();
 				if (game.getHome_team_id()==e.getTeamid()){
+					System.out.println(homeTotalAge);
 					homePlayersID.remove(Integer.toString(id));
-					homePlayersHeight.remove(new Integer(out.getInt("Height")));
+					homeTotalAge-=game.getSeason_id()-out.getInt("Birth_year");
+					System.out.println("Spiller ut " +homeTotalAge);
+					try{
+											homePlayersHeight.remove(new Integer(out.getInt("Height")));
+					}catch(Exception ex){	
+					}
 				}
 				else{
 					awayPlayersID.remove(Integer.toString(id));
-					awayPlayersHeight.remove(new Integer(out.getInt("Height")));
+					System.out.println(awayTotalAge);
+					awayTotalAge-=game.getSeason_id()-out.getInt("Birth_year");
+					System.out.println("Spiller ut " + awayTotalAge);
+					try{
+						awayPlayersHeight.remove(new Integer(out.getInt("Height")));
+					}catch(Exception ex){
+					}
 				}
 			}
 			if (e.getValue()==19){
 				int id=e.getPlayerid();
-				ResultSet in =DataBaseConnector.SelectPlayer("SELECT Height FROM PLAYER WHERE Player_id="+Integer.toString(id));
+				ResultSet in =DataBaseConnector.SelectPlayer("SELECT Height, Birth_year FROM PLAYER WHERE Player_id="+Integer.toString(id));
 				in.next();
 				if (game.getHome_team_id()==e.getGameid()){
 					homePlayersID.add(Integer.toString(id));
 					homePlayersHeight.add(in.getInt("Height"));
 					countTallPlayers(homePlayersHeight,0);
+					System.out.println(homeTotalAge);
+					homeTotalAge+=game.getSeason_id()-in.getInt("Birth_year");
+					homeAverageAge=homeTotalAge/totalHomePlayers;
+					System.out.println("Spiller inn " +homeTotalAge);
 				}
 				else{
 					awayPlayersID.add(Integer.toString(id));
 					awayPlayersHeight.add(in.getInt("Height"));
+					System.out.println(awayTotalAge);
 					countTallPlayers(awayPlayersHeight,1);
+					awayTotalAge+=game.getSeason_id()-in.getInt("Birth_year");
+					awayAverageAge=awayTotalAge/totalAwayPlayers;
+					System.out.println("Spiller inn " + awayTotalAge);
 				}
 			}
 
@@ -208,9 +235,12 @@ public class Main{
 				DataBaseConnector.insert("QUALIFIER", values);
 				if (i== 0& qualifierID.equals("30")){ //registrerer spillere i troppen
 					List<String> players = thisQual.getValues();
-					ResultSet gk =DataBaseConnector.SelectPlayer("SELECT Height FROM PLAYER WHERE Player_id="+players.get(0));
-					gk.next();
-					homegk=gk.getInt("Height");
+					ResultSet gk =DataBaseConnector.SelectPlayer("SELECT Height, Birth_year FROM PLAYER WHERE Player_id="+players.get(0));
+					if(gk.next()){
+						homegk=gk.getInt("Height");
+						homeTotalAge+=game.getSeason_id()-gk.getInt("Birth_year");
+					}
+					
 					for (int y=1;y<11; y++){
 						homePlayersID.add(players.get(y));
 						homeHeightStatement+=players.get(y)+",";
@@ -220,15 +250,19 @@ public class Main{
 					while(rs.next()){
 						int height=rs.getInt("Height");
 						homePlayersHeight.add(height);
+						homeTotalAge+=game.getSeason_id()-rs.getInt("Birth_year");
 					}
 					countTallPlayers(homePlayersHeight, 0);
 				}
-
+				homeAverageAge=homeTotalAge/totalHomePlayers;
 				if (i==1 & qualifierID.equals("30")){
 					List<String> players = thisQual.getValues();
-					ResultSet gk =DataBaseConnector.SelectPlayer("SELECT Height FROM PLAYER WHERE Player_id="+players.get(0));
-					gk.next();
-					awaygk=gk.getInt("Height");
+					ResultSet gk =DataBaseConnector.SelectPlayer("SELECT Height, Birth_year FROM PLAYER WHERE Player_id="+players.get(0));
+					if(gk.next()){
+						awaygk=gk.getInt("Height");
+						awayTotalAge+=game.getSeason_id()-gk.getInt("Birth_year");
+					}
+					
 
 					for (int y=1;y<11;y++){
 						awayPlayersID.add(players.get(y));
@@ -240,10 +274,11 @@ public class Main{
 					while(rs.next()){
 						int height=rs.getInt("Height");
 						awayPlayersHeight.add(height);
+						awayTotalAge+=game.getSeason_id()-rs.getInt("Birth_year");
 					}
 					countTallPlayers(awayPlayersHeight, 1);
 				}
-
+				awayAverageAge=awayTotalAge/totalAwayPlayers;
 				if(thisQual.values!=null){
 					for(int k=0; k<thisQual.values.size(); k++){
 						String thisValue = thisQual.values.get(k);
@@ -267,7 +302,7 @@ public class Main{
 		}
 	}
 
-	public static void CreateCorner(ArrayList<Qualifier> qualifierList, ArrayList<Event> eventList, Event event, int i, int homegk, int awaygk, int homeID, int awayID){
+	public static void CreateCorner(ArrayList<Qualifier> qualifierList, ArrayList<Event> eventList, Event event, int i, int homegk, int awaygk, int homeID, int awayID, float homeAverageAge, float awayAverageAge){
 		Corner corner = new Corner();
 		String column = "";
 		String values ="";
@@ -338,17 +373,21 @@ public class Main{
 		while(!taken){ //finner event_id til corneren. Events som f.eks. bytter kan komme mellom corner won og corner taken!
 			if(eventList.get(i+1).getValue()==1){ //value==1 -> pasning --> corneren er tatt
 				taken=true;
-				column+=",Team_id";
+				if (!column.equals("")){
+					column+=",";
+					values+=",";
+				}
+				column+="Team_id";
 				cornerTeamID=eventList.get(i+1).getTeamid();
-				values+=","+cornerTeamID;
+				values+=cornerTeamID;
 				if (cornerTeamID==homeID){
-					column+=",Gk_height,attack182,attack185,attack187,attack190,defend182,defend185,defend187,defend190";
-					values+=","+awaygk+","+home182+","+home185+","+home187 +","+ home190+","+away182+","+away185+","+away187+","+away190;
+					column+=",Gk_height,attack182,attack185,attack187,attack190,defend182,defend185,defend187,defend190, attack_avg_age, def_avg_age";
+					values+=","+awaygk+","+home182+","+home185+","+home187 +","+ home190+","+away182+","+away185+","+away187+","+away190+","+ homeAverageAge +","+awayAverageAge;
 
 				}
 				else{
-					column+=",Gk_height,attack182,attack185,attack187,attack190,defend182,defend185,defend187,defend190";
-					values+=","+homegk+","+away182+","+away185+","+away187+","+away190+","+home182+","+home185+","+home187 +","+ home190;
+					column+=",Gk_height,attack182,attack185,attack187,attack190,defend182,defend185,defend187,defend190, attack_avg_age, def_avg_age";
+					values+=","+homegk+","+away182+","+away185+","+away187+","+away190+","+home182+","+home185+","+home187 +","+ home190+","+awayAverageAge+","+homeAverageAge;
 				}
 				ArrayList<Qualifier> takenlist=eventList.get(i+1).getQualifierList();
 				boolean xdone=false;
@@ -436,7 +475,7 @@ public class Main{
 		}
 		String sqlString="("+column+")"+" VALUES " +"("+values+")";
 		try {
-			System.out.println(sqlString);
+			//System.out.println(sqlString);
 			DataBaseConnector.insert("Corner", sqlString);
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block

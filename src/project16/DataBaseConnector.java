@@ -70,10 +70,10 @@ public class DataBaseConnector {
 
 //			try{
 			stmt.executeUpdate(sql);
-//			}
-//			catch (Exception e){
-//
-//			}
+	//		}
+		//	catch (Exception e){
+
+			//}
 
 			//System.out.println("Inserted records into the table...");
 
