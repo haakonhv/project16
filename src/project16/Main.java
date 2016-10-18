@@ -138,9 +138,6 @@ public class Main{
 		String awayID = Integer.toString(parser.game.getAway_team_id());
 		String matchday = Integer.toString(parser.game.getMatchday());
 		String season = Integer.toString(parser.game.getSeason_id());
-		System.out.println(homeID);
-		System.out.println(awayID);
-		System.out.println(gameID);
 		DataBaseConnector.insert("GAME", gameID+","+homeID+","+awayID+","+matchday+","+season);
 		int cornerhelp = -1;
 		ArrayList<String> homePlayersID = new ArrayList<String>();
@@ -182,10 +179,10 @@ public class Main{
 				ResultSet out = DataBaseConnector.SelectPlayer("SELECT Height, Birth_year FROM PLAYER WHERE Player_id="+Integer.toString(id));
 				out.next();
 				if (game.getHome_team_id()==e.getTeamid()){
-					System.out.println(homeTotalAge);
+					System.out.println("Home " + homeTotalAge);
 					homePlayersID.remove(Integer.toString(id));
 					homeTotalAge-=game.getSeason_id()-out.getInt("Birth_year");
-					System.out.println("Spiller ut " +homeTotalAge);
+					System.out.println("Spiller ut Home " +homeTotalAge);
 					try{
 											homePlayersHeight.remove(new Integer(out.getInt("Height")));
 					}catch(Exception ex){	
@@ -193,9 +190,9 @@ public class Main{
 				}
 				else{
 					awayPlayersID.remove(Integer.toString(id));
-					System.out.println(awayTotalAge);
+					System.out.println("Away "+ awayTotalAge);
 					awayTotalAge-=game.getSeason_id()-out.getInt("Birth_year");
-					System.out.println("Spiller ut " + awayTotalAge);
+					System.out.println("Spiller ut away " + awayTotalAge);
 					try{
 						awayPlayersHeight.remove(new Integer(out.getInt("Height")));
 					}catch(Exception ex){
@@ -206,23 +203,21 @@ public class Main{
 				int id=e.getPlayerid();
 				ResultSet in =DataBaseConnector.SelectPlayer("SELECT Height, Birth_year FROM PLAYER WHERE Player_id="+Integer.toString(id));
 				in.next();
-				if (game.getHome_team_id()==e.getGameid()){
+				if (game.getHome_team_id()==e.getTeamid()){
 					homePlayersID.add(Integer.toString(id));
 					homePlayersHeight.add(in.getInt("Height"));
 					countTallPlayers(homePlayersHeight,0);
-					System.out.println(homeTotalAge);
 					homeTotalAge+=game.getSeason_id()-in.getInt("Birth_year");
 					homeAverageAge=homeTotalAge/totalHomePlayers;
-					System.out.println("Spiller inn " +homeTotalAge);
+					System.out.println("Spiller inn home " +homeTotalAge);
 				}
 				else{
 					awayPlayersID.add(Integer.toString(id));
 					awayPlayersHeight.add(in.getInt("Height"));
-					System.out.println(awayTotalAge);
 					countTallPlayers(awayPlayersHeight,1);
 					awayTotalAge+=game.getSeason_id()-in.getInt("Birth_year");
 					awayAverageAge=awayTotalAge/totalAwayPlayers;
-					System.out.println("Spiller inn " + awayTotalAge);
+					System.out.println("Spiller inn away " + awayTotalAge);
 				}
 			}
 
@@ -253,6 +248,7 @@ public class Main{
 						homeTotalAge+=game.getSeason_id()-rs.getInt("Birth_year");
 					}
 					countTallPlayers(homePlayersHeight, 0);
+					System.out.println("Home total start "+ homeTotalAge);
 				}
 				homeAverageAge=homeTotalAge/totalHomePlayers;
 				if (i==1 & qualifierID.equals("30")){
@@ -277,6 +273,7 @@ public class Main{
 						awayTotalAge+=game.getSeason_id()-rs.getInt("Birth_year");
 					}
 					countTallPlayers(awayPlayersHeight, 1);
+					System.out.println("Away total start " +awayTotalAge);
 				}
 				awayAverageAge=awayTotalAge/totalAwayPlayers;
 				if(thisQual.values!=null){
@@ -418,7 +415,7 @@ public class Main{
 					}
 				}
 				column+=",Indirectshot,Indirectgoal";
-				values+=","+Integer.toString(indirectshot)+","+Integer.toString(indirectshot);
+				values+=","+Integer.toString(indirectshot)+","+Integer.toString(indirectgoal);
 				for (Qualifier qual:takenlist){
 					if (qual.getQualifier_id()==140){ //xkoordinatet ballen lander
 						corner.setKoord_x(Float.parseFloat(qual.getValues().get(0)));
@@ -581,6 +578,7 @@ public class Main{
 		for(int i = 0; i < listOfFiles.length; i++){
 			buildDatabase(listOfFiles[i].toString());
 			System.out.println("Inserted Game "+(i+1)+" of "+listOfFiles.length);
+			break;
 		}
 	}
 
