@@ -174,7 +174,7 @@ public class Main{
 						CreateCorner(qualifierList, eventList, e, i, homegk, awaygk, game.getHome_team_id(),game.getAway_team_id(), homeAverageAge, awayAverageAge);
 				}
 			}
-			if (e.getValue()==18){//sjekker om event er spiller ut
+			else if (e.getValue()==18){//sjekker om event er spiller ut
 				int id=e.getPlayerid();
 				ResultSet out = DataBaseConnector.SelectPlayer("SELECT Height, Birth_year FROM PLAYER WHERE Player_id="+Integer.toString(id));
 				out.next();
@@ -199,7 +199,7 @@ public class Main{
 					}
 				}
 			}
-			if (e.getValue()==19){
+			else if (e.getValue()==19){
 				int id=e.getPlayerid();
 				ResultSet in =DataBaseConnector.SelectPlayer("SELECT Height, Birth_year FROM PLAYER WHERE Player_id="+Integer.toString(id));
 				in.next();
@@ -218,6 +218,19 @@ public class Main{
 					awayTotalAge+=game.getSeason_id()-in.getInt("Birth_year");
 					awayAverageAge=awayTotalAge/totalAwayPlayers;
 					//System.out.println("Spiller inn away " + awayTotalAge);
+				}
+			}
+			else if(e.getValue()==17){
+				for (Qualifier q:qualifierList){
+					if (q.getQualifier_id()==32||q.getQualifier_id()==33){
+						if(e.getTeamid()==game.getHome_team_id()){
+							totalHomePlayers-=1;
+							homeAverageAge=homeTotalAge/totalHomePlayers;
+						}else{
+							totalAwayPlayers-=1;
+							awayAverageAge=awayTotalAge/totalAwayPlayers;
+						}
+					}
 				}
 			}
 
