@@ -29,7 +29,7 @@ public class Main{
 	static int away185=0;
 	static int away187=0;
 	static int away190=0;
-	
+
 
 
 	public static String xmlGameFile;
@@ -198,7 +198,7 @@ public class Main{
 					countTallPlayers(awayPlayersHeight,1);
 				}
 			}
-			
+
 
 			for (int j=0; j<qualifierList.size();j++){
 				Qualifier thisQual = parser.eventList.get(i).qualifierList.get(j);
@@ -370,7 +370,7 @@ public class Main{
 						done=checkIfFinished(eventList,j,cornerTeamID);
 						if (!done){
 							indirectshot=CheckShot(eventList.get(j));
-							indirectgoal=CheckShot(eventList.get(j));
+							indirectgoal=CheckGoal(eventList.get(j));
 							if (indirectgoal==1){
 								done=true;
 							}
@@ -505,7 +505,7 @@ public class Main{
 		}
 	}
 	public static void countTallPlayers(ArrayList<Integer> List, int team){//int=0 if home, int=1 if away
-		
+
 		int tall1 = 0;//182
 		int tall2=0;//185
 		int tall3=0;//187
