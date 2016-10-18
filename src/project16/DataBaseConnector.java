@@ -2,6 +2,9 @@ package project16;
 
 import java.io.IOException;
 import java.sql.*;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Random;
 
 import javax.xml.parsers.ParserConfigurationException;
 
@@ -68,12 +71,23 @@ public class DataBaseConnector {
 
 
 
-//			try{
-			stmt.executeUpdate(sql);
-	//		}
-		//	catch (Exception e){
-
-			//}
+			try{
+				stmt.executeUpdate(sql);
+				}
+				catch (Exception e){
+					if(table.equals("QUALIFIER")){
+						List<String> valuelist = Arrays.asList(values.split("\\s*,\\s*"));
+						int oldQ_id = Integer.parseInt(valuelist.get(0));
+						Random r = new Random();
+						int randomAdd = r.nextInt(1000-1)+1;
+						String newQ_id = Integer.toString(oldQ_id+ randomAdd);
+						String newvalues = newQ_id+","+valuelist.get(1)+","+valuelist.get(2);
+						insert("QUALIFIER",newvalues);
+					}
+					else{
+						throw e;
+					}
+				}
 
 			//System.out.println("Inserted records into the table...");
 
