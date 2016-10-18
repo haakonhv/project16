@@ -148,10 +148,10 @@ public class Main{
 		int awaygk=0;
 		String homeHeightStatement = "SELECT Height, Birth_year FROM PLAYER WHERE Player_id IN (";
 		String awayHeightStatement = "SELECT Height, Birth_year FROM PLAYER WHERE Player_id IN (";
-		int homeTotalAge=0;
-		int awayTotalAge=0;
-		int totalHomePlayers=11;
-		int totalAwayPlayers=11;
+		float homeTotalAge=0;
+		float awayTotalAge=0;
+		float totalHomePlayers=11;
+		float totalAwayPlayers=11;
 		float homeAverageAge=homeTotalAge/totalHomePlayers;
 		float awayAverageAge=awayTotalAge/totalAwayPlayers;
 		
@@ -182,6 +182,7 @@ public class Main{
 					//System.out.println("Home " + homeTotalAge);
 					homePlayersID.remove(Integer.toString(id));
 					homeTotalAge-=game.getSeason_id()-out.getInt("Birth_year");
+					System.out.println("spiller ut home byear "+out.getInt("Birth_year")+" total "+homeTotalAge +" number "+totalHomePlayers);
 					//System.out.println("Spiller ut Home " +homeTotalAge);
 					try{
 											homePlayersHeight.remove(new Integer(out.getInt("Height")));
@@ -208,8 +209,9 @@ public class Main{
 					homePlayersHeight.add(in.getInt("Height"));
 					countTallPlayers(homePlayersHeight,0);
 					homeTotalAge+=game.getSeason_id()-in.getInt("Birth_year");
+					System.out.println(in.getInt("Birth_year"));
 					homeAverageAge=homeTotalAge/totalHomePlayers;
-					//System.out.println("Spiller inn home " +homeTotalAge);
+					System.out.println("Spiller inn home average etter bytte " + homeAverageAge +" "+ e.getId());
 				}
 				else{
 					awayPlayersID.add(Integer.toString(id));
@@ -217,7 +219,7 @@ public class Main{
 					countTallPlayers(awayPlayersHeight,1);
 					awayTotalAge+=game.getSeason_id()-in.getInt("Birth_year");
 					awayAverageAge=awayTotalAge/totalAwayPlayers;
-					//System.out.println("Spiller inn away " + awayTotalAge);
+					System.out.println("Spiller inn away " + awayAverageAge+" "	+ e.getId());
 				}
 			}
 
@@ -247,10 +249,11 @@ public class Main{
 						homePlayersHeight.add(height);
 						homeTotalAge+=game.getSeason_id()-rs.getInt("Birth_year");
 					}
+					homeAverageAge=homeTotalAge/totalHomePlayers;
 					countTallPlayers(homePlayersHeight, 0);
-					//System.out.println("Home total start "+ homeTotalAge);
+					System.out.println("Home total start "+ homeAverageAge+" " + e.getId());
 				}
-				homeAverageAge=homeTotalAge/totalHomePlayers;
+			
 				if (i==1 & qualifierID.equals("30")){
 					List<String> players = thisQual.getValues();
 					ResultSet gk =DataBaseConnector.SelectPlayer("SELECT Height, Birth_year FROM PLAYER WHERE Player_id="+players.get(0));
@@ -273,9 +276,11 @@ public class Main{
 						awayTotalAge+=game.getSeason_id()-rs.getInt("Birth_year");
 					}
 					countTallPlayers(awayPlayersHeight, 1);
-					//System.out.println("Away total start " +awayTotalAge);
+					awayAverageAge=awayTotalAge/totalAwayPlayers;
+					System.out.println("Away average start " +awayAverageAge+" "+e.getId());
+
 				}
-				awayAverageAge=awayTotalAge/totalAwayPlayers;
+				
 				if(thisQual.values!=null){
 					for(int k=0; k<thisQual.values.size(); k++){
 						String thisValue = thisQual.values.get(k);
