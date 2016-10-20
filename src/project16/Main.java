@@ -156,7 +156,7 @@ public class Main{
 		float awayAverageAge=awayTotalAge/totalAwayPlayers;
 		int homeGoals=0;
 		int awayGoals=0;
-		
+
 
 		for(int i=0; i<eventList.size();i++){
 			Event e = eventList.get(i);
@@ -185,7 +185,7 @@ public class Main{
 					homeTotalAge-=game.getSeason_id()-out.getInt("Birth_year");
 					try{
 											homePlayersHeight.remove(new Integer(out.getInt("Height")));
-					}catch(Exception ex){	
+					}catch(Exception ex){
 					}
 				}
 				else{
@@ -204,7 +204,7 @@ public class Main{
 				if (game.getHome_team_id()==e.getTeamid()){
 					homePlayersID.add(Integer.toString(id));
 					homePlayersHeight.add(in.getInt("Height"));
-					countTallPlayers(homePlayersHeight,0);	
+					countTallPlayers(homePlayersHeight,0);
 					homeTotalAge+=game.getSeason_id()-in.getInt("Birth_year");
 					homeAverageAge=homeTotalAge/totalHomePlayers;
 				}
@@ -252,7 +252,7 @@ public class Main{
 						homegk=gk.getInt("Height");
 						homeTotalAge+=game.getSeason_id()-gk.getInt("Birth_year");
 					}
-					
+
 					for (int y=1;y<11; y++){
 						homePlayersID.add(players.get(y));
 						homeHeightStatement+=players.get(y)+",";
@@ -267,7 +267,7 @@ public class Main{
 					homeAverageAge=homeTotalAge/totalHomePlayers;
 					countTallPlayers(homePlayersHeight, 0);
 				}
-			
+
 				if (i==1 & qualifierID.equals("30")){
 					List<String> players = thisQual.getValues();
 					ResultSet gk =DataBaseConnector.SelectPlayer("SELECT Height, Birth_year FROM PLAYER WHERE Player_id="+players.get(0));
@@ -275,7 +275,7 @@ public class Main{
 						awaygk=gk.getInt("Height");
 						awayTotalAge+=game.getSeason_id()-gk.getInt("Birth_year");
 					}
-					
+
 
 					for (int y=1;y<11;y++){
 						awayPlayersID.add(players.get(y));
@@ -293,7 +293,7 @@ public class Main{
 					awayAverageAge=awayTotalAge/totalAwayPlayers;
 
 				}
-				
+
 				if(thisQual.values!=null){
 					for(int k=0; k<thisQual.values.size(); k++){
 						String thisValue = thisQual.values.get(k);
@@ -602,7 +602,7 @@ public class Main{
 	public static void buildDatabaseAll() throws ParserConfigurationException, SAXException, IOException, SQLException{
 		for(int i = 54; i < listOfFiles.length; i++){
 			buildDatabase(listOfFiles[i].toString());
-			System.out.println("Inserted Game "+(i+1)+" of "+listOfFiles.length);
+			System.out.println("Inserted Game "+(i+1)+" of "+listOfFiles.length + ", filename = "+ listOfFiles[i]);
 		}
 	}
 
