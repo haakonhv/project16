@@ -386,6 +386,9 @@ public class Main{
 		}
 		boolean taken = false;
 		while(!taken){ //finner event_id til corneren. Events som f.eks. bytter kan komme mellom corner won og corner taken!
+			if(eventList.get(i).getValue()==30){
+				return;
+			}
 			if(eventList.get(i+1).getValue()==1){ //value==1 -> pasning --> corneren er tatt
 				taken=true;
 				if (!column.equals("")){
@@ -597,7 +600,7 @@ public class Main{
 	}
 
 	public static void buildDatabaseAll() throws ParserConfigurationException, SAXException, IOException, SQLException{
-		for(int i = 0; i < listOfFiles.length; i++){
+		for(int i = 54; i < listOfFiles.length; i++){
 			buildDatabase(listOfFiles[i].toString());
 			System.out.println("Inserted Game "+(i+1)+" of "+listOfFiles.length + ", filename = "+ listOfFiles[i]);
 		}
