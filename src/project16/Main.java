@@ -600,7 +600,7 @@ public class Main{
 	}
 
 	public static void buildDatabaseAll() throws ParserConfigurationException, SAXException, IOException, SQLException{
-		for(int i = 54; i < listOfFiles.length; i++){
+		for(int i = 0; i < listOfFiles.length; i++){
 			buildDatabase(listOfFiles[i].toString());
 			System.out.println("Inserted Game "+(i+1)+" of "+listOfFiles.length + ", filename = "+ listOfFiles[i]);
 		}
