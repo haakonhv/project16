@@ -401,15 +401,16 @@ public class Main{
 				if (cornerTeamID==homeID){
 					float mp= totalHomePlayers-totalAwayPlayers;//manpower difference
 					int gd = homeGoals-awayGoals;//goaldifference
-					column+=",Gk_height,attack182,attack185,attack187,attack190,defend182,defend185,defend187,defend190, attack_avg_age, def_avg_age, mp_diff, gd";
-					values+=","+awaygk+","+home182+","+home185+","+home187 +","+ home190+","+away182+","+away185+","+away187+","+away190+","+ homeAverageAge +","+awayAverageAge+","+mp+","+gd;
+					
+					column+=",Gk_height,attack182,attack185,attack187,attack190,defend182,defend185,defend187,defend190, attack_avg_age, def_avg_age, mp_diff, gd, defend_id";
+					values+=","+awaygk+","+home182+","+home185+","+home187 +","+ home190+","+away182+","+away185+","+away187+","+away190+","+ homeAverageAge +","+awayAverageAge+","+mp+","+gd+","+awayID;
 
 				}
 				else{
 					float mp=totalAwayPlayers-totalHomePlayers; //manpower difference
 					int gd =awayGoals-homeGoals;
-					column+=",Gk_height,attack182,attack185,attack187,attack190,defend182,defend185,defend187,defend190, attack_avg_age, def_avg_age, mp_diff, gd";
-					values+=","+homegk+","+away182+","+away185+","+away187+","+away190+","+home182+","+home185+","+home187 +","+ home190+","+awayAverageAge+","+homeAverageAge+","+mp+","+gd;
+					column+=",Gk_height,attack182,attack185,attack187,attack190,defend182,defend185,defend187,defend190, attack_avg_age, def_avg_age, mp_diff, gd, defend_id";
+					values+=","+homegk+","+away182+","+away185+","+away187+","+away190+","+home182+","+home185+","+home187 +","+ home190+","+awayAverageAge+","+homeAverageAge+","+mp+","+gd+","+homeID;
 				}
 				ArrayList<Qualifier> takenlist=eventList.get(i+1).getQualifierList();
 				boolean xdone=false;
