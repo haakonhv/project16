@@ -525,7 +525,6 @@ public class Main{
 		}
 		String sqlString="("+column+")"+" VALUES " +"("+values+")";
 		try {
-			System.out.println(sqlString);
 			DataBaseConnector.insert("Corner", sqlString);
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
