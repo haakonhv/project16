@@ -167,7 +167,9 @@ public class Main{
 			String xStart =  Float.toString(parser.eventList.get(i).xstart);
 			String yStart =  Float.toString(parser.eventList.get(i).ystart);
 			String number = Float.toString(parser.eventList.get(i).number);
-			String values = eventID+","+typeID+","+teamID+","+playerID+","+xStart+","+yStart+","+gameID+","+number;
+			String period = Integer.toString(parser.eventList.get(i).period);
+			String minute = Integer.toString(parser.eventList.get(i).minute);
+			String values = eventID+","+typeID+","+teamID+","+playerID+","+xStart+","+yStart+","+gameID+","+number+","+period+","+minute;
 			DataBaseConnector.insert("EVENT", values);
 			ArrayList<Qualifier> qualifierList = e.getQualifierList();
 			if (e.getValue()==6){ //sjekker om event er corner
@@ -322,6 +324,30 @@ public class Main{
 		String column = "";
 		String values ="";
 		int cornerTeamID=0;
+		
+		int period=event.getPeriod();
+		int minute =event.getMinute();
+		column+="T1,T2,T3,T4,";
+		if(period==0){//sjekker om corneren er i førsteomgang
+			if (minute<23){
+				values+="1,0,0,0,";
+			}
+			else {
+				values+="0,1,0,0,";
+			}
+		}
+		else if(period==1){
+			if(minute<78){
+				values+="0,0,1,0,";
+			}
+			else{
+				values+="0,0,0,1,";
+			}
+		}
+		else{
+			System.out.println("Ingen period");
+			values+="0,0,0,0,";
+		}
 
 		for (Qualifier qual:qualifierList){
 			if(qual.getQualifier_id()==219){
@@ -342,14 +368,14 @@ public class Main{
 				corner.setFirst_post(0);
 				corner.setFar_post(1);
 				column+="Near_post,Far_post";
-				values="0,1";
+				values+="0,1";
 				break;
 			}
 			else if(qual.getQualifier_id()==222){
 				corner.setFirst_post(0);
 				corner.setFar_post(0);
 				column+="Near_post,Far_post";
-				values="0,0";
+				values+="0,0";
 				break;
 			}
 		}
@@ -373,14 +399,14 @@ public class Main{
 				corner.setFirst_post(0);
 				corner.setFar_post(1);
 				column+="Near_post,Far_post";
-				values="0,1";
+				values+="0,1";
 				break;
 			}
 			else if(qual.getQualifier_id()==222){
 				corner.setFirst_post(0);
 				corner.setFar_post(0);
 				column+="Near_post,Far_post";
-				values="0,0";
+				values+="0,0";
 				break;
 			}
 		}
@@ -412,6 +438,7 @@ public class Main{
 					column+=",Gk_height,attack182,attack185,attack187,attack190,defend182,defend185,defend187,defend190, attack_avg_age, def_avg_age, mp_diff, gd, defend_id";
 					values+=","+homegk+","+away182+","+away185+","+away187+","+away190+","+home182+","+home185+","+home187 +","+ home190+","+awayAverageAge+","+homeAverageAge+","+mp+","+gd+","+homeID;
 				}
+				
 				ArrayList<Qualifier> takenlist=eventList.get(i+1).getQualifierList();
 				boolean xdone=false;
 				boolean ydone=false;
@@ -498,7 +525,7 @@ public class Main{
 		}
 		String sqlString="("+column+")"+" VALUES " +"("+values+")";
 		try {
-			//System.out.println(sqlString);
+			System.out.println(sqlString);
 			DataBaseConnector.insert("Corner", sqlString);
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block

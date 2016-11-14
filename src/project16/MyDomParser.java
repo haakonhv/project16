@@ -64,6 +64,17 @@ public class MyDomParser {
          	event.setId(Integer.parseInt(xmlEvent.getAttribute("id")));
          	event.setGameid(game.getId());
          	event.setNumber(i+1);
+         	if(Integer.parseInt(xmlEvent.getAttribute("period_id"))==1){
+         		event.setPeriod(0);
+         	}
+         	else if(Integer.parseInt(xmlEvent.getAttribute("period_id"))==2){
+         		event.setPeriod(1);
+         	}
+         	else {
+         		event.setPeriod(16);
+         	}
+         	event.setMinute(Integer.parseInt(xmlEvent.getAttribute("min")));
+         	
          	if(xmlEvent.hasAttribute("player_id")){
          		event.setPlayerid(Integer.parseInt(xmlEvent.getAttribute("player_id")));
          	}

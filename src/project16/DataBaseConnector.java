@@ -13,7 +13,7 @@ import org.xml.sax.SAXException;
 
 public class DataBaseConnector {
 	static final String JDBC_DRIVER = "com.mysql.jdbc.Driver";
-	static final String DB_URL = "jdbc:mysql://mysql.stud.ntnu.no:3306/haakosh_prosjektoppgdb";
+	static final String DB_URL = "jdbc:mysql://mysql.stud.ntnu.no:3306/test";
 
 	static final String USER = "haakosh_master";
 	static final String PASS = "project16";
