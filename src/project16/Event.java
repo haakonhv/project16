@@ -12,7 +12,21 @@ public class Event {
 	int number;
 	int gameid;
 	ArrayList<Qualifier> qualifierList;
+	int period;
+	int minute;
 
+	public int getPeriod() {
+		return period;
+	}
+	public void setPeriod(int period) {
+		this.period = period;
+	}
+	public int getMinute() {
+		return minute;
+	}
+	public void setMinute(int minute) {
+		this.minute = minute;
+	}
 	public int getId() {
 		return id;
 	}
