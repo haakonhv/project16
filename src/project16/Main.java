@@ -327,55 +327,55 @@ public class Main{
 		
 		int period=event.getPeriod();
 		int minute =event.getMinute();
-		column+="T1,T2,T3,T4,";
+		column+="T1,T2,T3,T4";
 		if(period==0){//sjekker om corneren er i førsteomgang
 			if (minute<23){
-				values+="1,0,0,0,";
+				values+="1,0,0,0";
 			}
 			else {
-				values+="0,1,0,0,";
+				values+="0,1,0,0";
 			}
 		}
 		else if(period==1){
 			if(minute<78){
-				values+="0,0,1,0,";
+				values+="0,0,1,0";
 			}
 			else{
-				values+="0,0,0,1,";
+				values+="0,0,0,1";
 			}
 		}
 		else{
 			System.out.println("Ingen period");
-			values+="0,0,0,0,";
+			values+="0,0,0,0";
 		}
 
 		for (Qualifier qual:qualifierList){
 			if(qual.getQualifier_id()==219){
 				corner.setFar_post(1);
 				corner.setFirst_post(1);
-				column+="Near_post,Far_post";
-				values+="1, 1";
+				column+=",Near_post,Far_post";
+				values+=",1, 1";
 				break;
 			}
 			else if(qual.getQualifier_id()==220){
 				corner.setFirst_post(1);
 				corner.setFar_post(0);
-				column+="Near_post,Far_post";
-				values+="1,0";
+				column+=",Near_post,Far_post";
+				values+=",1,0";
 				break;
 			}
 			else if(qual.getQualifier_id()==221){
 				corner.setFirst_post(0);
 				corner.setFar_post(1);
-				column+="Near_post,Far_post";
-				values+="0,1";
+				column+=",Near_post,Far_post";
+				values+=",0,1";
 				break;
 			}
 			else if(qual.getQualifier_id()==222){
 				corner.setFirst_post(0);
 				corner.setFar_post(0);
-				column+="Near_post,Far_post";
-				values+="0,0";
+				column+=",Near_post,Far_post";
+				values+=",0,0";
 				break;
 			}
 		}
@@ -384,29 +384,29 @@ public class Main{
 			if(qual.getQualifier_id()==219){
 				corner.setFar_post(1);
 				corner.setFirst_post(1);
-				column+="Near_post,Far_post";
-				values+="1, 1";
+				column+=",Near_post,Far_post";
+				values+=",1, 1";
 				break;
 			}
 			else if(qual.getQualifier_id()==220){
 				corner.setFirst_post(1);
 				corner.setFar_post(0);
-				column+="Near_post,Far_post";
-				values+="1,0";
+				column+=",Near_post,Far_post";
+				values+=",1,0";
 				break;
 			}
 			else if(qual.getQualifier_id()==221){
 				corner.setFirst_post(0);
 				corner.setFar_post(1);
-				column+="Near_post,Far_post";
-				values+="0,1";
+				column+=",Near_post,Far_post";
+				values+=",0,1";
 				break;
 			}
 			else if(qual.getQualifier_id()==222){
 				corner.setFirst_post(0);
 				corner.setFar_post(0);
-				column+="Near_post,Far_post";
-				values+="0,0";
+				column+=",Near_post,Far_post";
+				values+=",0,0";
 				break;
 			}
 		}
@@ -427,7 +427,6 @@ public class Main{
 				if (cornerTeamID==homeID){
 					float mp= totalHomePlayers-totalAwayPlayers;//manpower difference
 					int gd = homeGoals-awayGoals;//goaldifference
-					
 					column+=",Gk_height,attack182,attack185,attack187,attack190,defend182,defend185,defend187,defend190, attack_avg_age, def_avg_age, mp_diff, gd, defend_id";
 					values+=","+awaygk+","+home182+","+home185+","+home187 +","+ home190+","+away182+","+away185+","+away187+","+away190+","+ homeAverageAge +","+awayAverageAge+","+mp+","+gd+","+awayID;
 

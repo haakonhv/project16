@@ -85,6 +85,7 @@ public class DataBaseConnector {
 						insert("QUALIFIER",newvalues);
 					}
 					else{
+						System.out.println(sql);
 						throw e;
 					}
 				}
